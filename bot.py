@@ -1,3 +1,6 @@
+# FurBot by BugadinhoGamers (https://github.com/BugadinhoGamers/FurBot)
+# Licensed under GPLv3.0
+
 import io
 import aiohttp
 import os
@@ -15,6 +18,10 @@ import psutil
 import random
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.CRITICAL)
 
 OPUS_LIBS = ['libopus-0.x86.dll', 'libopus-0.x64.dll', 'libopus-0.dll', 'libopus.so.0', 'libopus.0.dylib']
 
@@ -116,6 +123,8 @@ async def on_ready():
 
 @bot.event
 async def on_message_delete(message):
+    if (message.channel.type is discord.ChannelType.private):
+        return
     if (message.guild.id != 540651642463453253):
         return
     
@@ -179,6 +188,11 @@ async def request(ctx, type, *, tags):
             colormaster = 0x00ff88
         elif(type == "nsfw"):
             if (ctx.message.channel.is_nsfw()):
+                link = "https://e621.net/"
+                RequestSTR = RequestSTR + "+rating:explicit"
+                prefix = "SPOILER_"
+                colormaster = 0x8000ff
+            elif (ctx.message.channel.type is discord.ChannelType.private):
                 link = "https://e621.net/"
                 RequestSTR = RequestSTR + "+rating:explicit"
                 prefix = "SPOILER_"
@@ -248,6 +262,9 @@ async def measuredick(ctx):
 
 @bot.command()
 async def cumlord(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
     random.seed(datetime.combine(date.today(), datetime.min.time()).replace(tzinfo=timezone.utc).timestamp())
     serverUsers = ctx.message.guild.members
     await ctx.message.channel.send("The daily cumlord is " + serverUsers[random.randint(0,len(serverUsers)-1)].mention)
@@ -293,6 +310,10 @@ async def on_message(message):
 
 @bot.command()
 async def rap(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+
     guild = ctx.guild
     author = ctx.message.author
     voice_channel = author.voice.channel
@@ -307,7 +328,30 @@ async def rap(ctx):
         return await ctx.message.channel.send("Something is already playing, please wait!")
 
 @bot.command()
+async def nokia(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+
+    guild = ctx.guild
+    author = ctx.message.author
+    voice_channel = author.voice.channel
+    try:
+        vc = await voice_channel.connect()
+    except:
+        vc = guild.voice_client
+    audio_source = discord.FFmpegPCMAudio('nokia_ringtone.mp3')
+    if not vc.is_playing():
+        vc.play(audio_source, after=None)
+    else:
+        return await ctx.message.channel.send("Something is already playing, please wait!")
+
+@bot.command()
 async def moan(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
     guild = ctx.guild
     author = ctx.message.author
     voice_channel = author.voice.channel
@@ -322,7 +366,108 @@ async def moan(ctx):
         return await ctx.message.channel.send("Something is already playing, please wait!")
 
 @bot.command()
+async def owo(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
+    guild = ctx.guild
+    author = ctx.message.author
+    voice_channel = author.voice.channel
+    try:
+        vc = await voice_channel.connect()
+    except:
+        vc = guild.voice_client
+    audio_source = discord.FFmpegPCMAudio(random.choice(["OWO_1.mp3", "OWO_2.mp3", "OWO_3.mp3"]))
+    if not vc.is_playing():
+        vc.play(audio_source, after=None)
+    else:
+        return await ctx.message.channel.send("Something is already playing, please wait!")
+
+@bot.command()
+async def obliterate(ctx, obliterated: discord.User):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
+    RequestSTR = "posts.json?tags=order:random"
+    RequestSTR += "+-bestiality+-pony+-watersports+-gore+-scat+-young+-loli+-my_little_pony+-vore+-frienship_is_magic+-nightmare_fuel"
+    link = "https://e621.net/"
+    colormaster = 0x00ff88
+    Req = requests.get(link + RequestSTR + "&limit=1", headers=headers)
+    ReqJson = Req.json()
+    if(len(ReqJson["posts"]) == 0):
+        return await ctx.message.channel.send("Orbital strike has failed!")
+    Post = ReqJson["posts"][0]["file"]["url"]
+
+    try:
+        if(obliterated.dm_channel == None):
+            await obliterated.create_dm()
+    
+        if(obliterated.dm_channel == None):
+            return await ctx.message.channel.send("Orbital strike has failed!")
+    except:
+        return await ctx.message.channel.send("Orbital strike has failed!")
+    
+    embed=discord.Embed(color=0x8000ff)
+    embed.set_image(url="https://media1.giphy.com/media/3K0D1Dkqh9MOmLSjzW/giphy.gif")
+
+    try:
+        await obliterated.dm_channel.send("You have been obliterated by " + ctx.message.author.name + "!")
+        message1 = await obliterated.dm_channel.send(Post)
+        message2 = await obliterated.dm_channel.send(Post)
+        message3 = await obliterated.dm_channel.send(Post)
+        await ctx.message.channel.send(content=ctx.message.author.mention + " has obliterated " + obliterated.mention + "!",embed=embed)
+        await asyncio.sleep(1) 
+        await message1.delete()
+        await message2.delete()
+        await message3.delete()
+    except:
+        return await ctx.message.channel.send("Orbital strike has failed!")
+
+@bot.command()
+async def airstrike(ctx, obliterated: discord.User):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
+    RequestSTR = "posts.json?tags=order:random"
+    RequestSTR += "+-bestiality+-pony+-watersports+-gore+-scat+-young+-loli+-my_little_pony+-vore+-frienship_is_magic+-nightmare_fuel"
+    link = "https://e621.net/"
+    colormaster = 0x00ff88
+    Req = requests.get(link + RequestSTR + "&limit=1", headers=headers)
+    ReqJson = Req.json()
+    if(len(ReqJson["posts"]) == 0):
+        return await ctx.message.channel.send("Airstrike has failed!")
+    Post = ReqJson["posts"][0]["file"]["url"]
+
+    try:
+        if(obliterated.dm_channel == None):
+            await obliterated.create_dm()
+    
+        if(obliterated.dm_channel == None):
+            return await ctx.message.channel.send("Airstrike has failed!")
+    except:
+        return await ctx.message.channel.send("Airstrike has failed!")
+    
+    embed=discord.Embed(color=0x8000ff)
+    embed.set_image(url="https://thumbs.gfycat.com/AdmirableGrouchyBoto-small.gif")
+
+    try:
+        await obliterated.dm_channel.send("You have been airstriked by " + ctx.message.author.name + "!")
+        message1 = await obliterated.dm_channel.send(Post)
+        await ctx.message.channel.send(content=ctx.message.author.mention + " has airstriked " + obliterated.mention + "!",embed=embed)
+        await asyncio.sleep(1) 
+        await message1.delete()
+    except:
+        return await ctx.message.channel.send("Airstrike has failed!")
+
+@bot.command()
 async def disconnect(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
     guild = ctx.message.guild
     try:
         if (guild.voice_client.is_playing()):
