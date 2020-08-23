@@ -10,6 +10,9 @@ import json
 import requests
 from datetime import datetime
 import psutil
+import random
+
+CringeList = ["fortnite", "undertale"]
 
 CumList = [338468574970511371, 228659079420182539]
 
@@ -23,7 +26,7 @@ bot.remove_command('help')
 
 async def status_task():
     while True:
-        await bot.change_presence(activity=discord.Game(name="Powered by e621"))
+        await bot.change_presence(activity=discord.Game(name="Powered by e621.net"))
         await asyncio.sleep(10)
         await bot.change_presence(activity=discord.Game(name="Use f-help to get some help"))
         await asyncio.sleep(10)
@@ -88,7 +91,7 @@ async def on_message_delete(message):
 
 @bot.event
 async def on_member_join(member):
-    if (message.guild.id != 540651642463453253):
+    if (member.guild.id != 540651642463453253):
         return
     
     Cc = bot.get_channel(745811042893955082)
@@ -96,7 +99,7 @@ async def on_member_join(member):
 
 @bot.event
 async def on_member_remove(member):
-    if (message.guild.id != 540651642463453253):
+    if (member.guild.id != 540651642463453253):
         return
     
     Cc = bot.get_channel(745811042893955082)
@@ -188,5 +191,45 @@ async def request(ctx, type, *, tags):
 async def meme(ctx):
     await ctx.invoke(bot.get_command('request'), type='sfw', tags="meme")
 
+@bot.command()
+async def pounce(ctx, pounced):
+    embed=discord.Embed(color=0x8000ff)
+    embed.set_image(url="https://static1.e926.net/data/06/65/066570f0b541f23c8d03d1956a590167.gif")
+    await ctx.message.channel.send(content=ctx.message.author.mention + " pounced on " + pounced,embed=embed)
+
+@bot.command()
+async def measuredick(ctx):
+    random.seed(ctx.message.author.id * 2)
+    await ctx.message.channel.send("Your cock is about " + str(random.randint(0,200) / 10) + "cm")
+
+@bot.command()
+async def roulette(ctx):
+    bullet = random.randint(1,6)
+    if (bullet == 6):
+        await ctx.message.channel.send("You lost!")
+    else:
+        await ctx.message.channel.send("You win!")
+
+@bot.command()
+async def howmuch(ctx, bobao):
+    random.seed(ctx.message.author.id * int(bobao, 36) * 2)
+    bobin = random.randint(0,100)
+    await ctx.message.channel.send(ctx.message.author.mention + " is " + str(bobin) + "% " + bobao)
+    if (bobin == 100):
+        await ctx.invoke(bot.get_command('request'), type='sfw', tags=bobao)
+
+@bot.event
+async def on_message(message):
+    if any(word in message.content for word in CringeList):
+        await message.delete()
+        return await message.channel.send(message.author.mention + ", bruh you just posted cringe, you are gonna lose credits!")
+    
+    anger = random.randint(1,10000)
+
+    if (anger == 1):
+        await message.delete()
+        return await message.channel.send(message.author.mention + ", go suck a cock, i fucking hate you!")
+    
+    await bot.process_commands(message)
+
 bot.run(token)
-bot.close()
