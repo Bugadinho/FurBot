@@ -9,10 +9,36 @@ from discord import Game
 import json
 import requests
 from datetime import datetime
+from datetime import date
+from datetime import timezone
 import psutil
 import random
+from chatterbot import ChatBot
+from chatterbot.trainers import ListTrainer
+
+OPUS_LIBS = ['libopus-0.x86.dll', 'libopus-0.x64.dll', 'libopus-0.dll', 'libopus.so.0', 'libopus.0.dylib']
+
+def load_opus_lib(opus_libs=OPUS_LIBS):
+    if opus.is_loaded():
+        return True
+
+    for opus_lib in opus_libs:
+        try:
+            opus.load_opus(opus_lib)
+            return
+        except OSError:
+            pass
+
+        raise RuntimeError('Could not load an opus lib. Tried %s' % (', '.join(opus_libs)))
+
+chatbot = ChatBot(
+    'FurBot',
+    trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
+)
 
 CringeList = ["fortnite", "undertale"]
+AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
+MoanList = ["moan 1.mp3", "moan 2.mp3", "moan 3.mp3", "moan 4.mp3", "moan 5.mp3", "moan 6.mp3"]
 
 CumList = [338468574970511371, 228659079420182539]
 
@@ -71,10 +97,22 @@ async def status_task():
         await bot.change_presence(activity=discord.Game(name=""))
         await asyncio.sleep(10)
 
+async def vc_task():
+    while True:
+        await asyncio.sleep(5)
+        for guild in bot.guilds:
+            try:
+                if (guild.voice_client.is_playing()):
+                    pass
+                else:
+                    await guild.voice_client.disconnect()
+            except:
+                pass
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
     bot.loop.create_task(status_task())
+    bot.loop.create_task(vc_task())
 
 @bot.event
 async def on_message_delete(message):
@@ -198,9 +236,26 @@ async def pounce(ctx, pounced):
     await ctx.message.channel.send(content=ctx.message.author.mention + " pounced on " + pounced,embed=embed)
 
 @bot.command()
+async def yiff(ctx, yiffed):
+    embed=discord.Embed(color=0x8000ff)
+    embed.set_image(url="https://logos-download.com/wp-content/uploads/2016/10/Python_logo_wordmark.png")
+    await ctx.message.channel.send(content=ctx.message.author.mention + " yiffed " + yiffed,embed=embed)
+
+@bot.command()
 async def measuredick(ctx):
     random.seed(ctx.message.author.id * 2)
     await ctx.message.channel.send("Your cock is about " + str(random.randint(0,200) / 10) + "cm")
+
+@bot.command()
+async def cumlord(ctx):
+    random.seed(datetime.combine(date.today(), datetime.min.time()).replace(tzinfo=timezone.utc).timestamp())
+    serverUsers = ctx.message.guild.members
+    await ctx.message.channel.send("The daily cumlord is " + serverUsers[random.randint(0,len(serverUsers)-1)].mention)
+
+@bot.command()
+async def whichanimal(ctx):
+    random.seed(ctx.message.author.id * 2)
+    await ctx.message.channel.send("You are a " + AnimalList[random.randint(0,len(AnimalList) - 1)])
 
 @bot.command()
 async def roulette(ctx):
@@ -209,6 +264,10 @@ async def roulette(ctx):
         await ctx.message.channel.send("You lost!")
     else:
         await ctx.message.channel.send("You win!")
+
+@bot.command()
+async def chat(ctx, *, spoke):
+    await ctx.message.channel.send(chatbot.get_response(spoke))
 
 @bot.command()
 async def howmuch(ctx, bobao):
@@ -232,4 +291,46 @@ async def on_message(message):
     
     await bot.process_commands(message)
 
-bot.run(token)
+@bot.command()
+async def rap(ctx):
+    guild = ctx.guild
+    author = ctx.message.author
+    voice_channel = author.voice.channel
+    try:
+        vc = await voice_channel.connect()
+    except:
+        vc = guild.voice_client
+    audio_source = discord.FFmpegPCMAudio('bad furry rap.mp3')
+    if not vc.is_playing():
+        vc.play(audio_source, after=None)
+    else:
+        return await ctx.message.channel.send("Something is already playing, please wait!")
+
+@bot.command()
+async def moan(ctx):
+    guild = ctx.guild
+    author = ctx.message.author
+    voice_channel = author.voice.channel
+    try:
+        vc = await voice_channel.connect()
+    except:
+        vc = guild.voice_client
+    audio_source = discord.FFmpegPCMAudio(random.choice(MoanList))
+    if not vc.is_playing():
+        vc.play(audio_source, after=None)
+    else:
+        return await ctx.message.channel.send("Something is already playing, please wait!")
+
+@bot.command()
+async def disconnect(ctx):
+    guild = ctx.message.guild
+    try:
+        if (guild.voice_client.is_playing()):
+            await guild.voice_client.stop()
+            await guild.voice_client.disconnect()
+        else:
+            await guild.voice_client.disconnect()
+    except:
+        pass
+if __name__ == "__main__": 
+    bot.run(token)
