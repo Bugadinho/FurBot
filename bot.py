@@ -9,6 +9,7 @@ import asyncio
 from discord.ext import commands, tasks
 from discord.utils import get
 from discord import Game
+import discord_argparse.errors as da_errors
 import json
 import requests
 from datetime import datetime
@@ -152,11 +153,49 @@ async def on_member_remove(member):
     Cc = bot.get_channel(745811042893955082)
     await Cc.send(str(member.name) + '#' + member.discriminator + ' saiu...')
 
+@bot.event
+async def on_command_error(ctx, error):
+    if hasattr(ctx.command, 'on_error'):
+        return
+    
+    ignored = (commands.CommandNotFound, commands.UserInputError)
+
+    if isinstance(error, commands.CommandNotFound):
+        embed=discord.Embed(title="Invalid command!", description="Command does not exist!" , color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
+    embed=discord.Embed(title="Error!", description="Something went wrong when calling the command!", color=0xff0000)
+    embed.set_footer(text=error)
+    return await ctx.message.channel.send(embed=embed)
+
 @bot.command()
 async def help(ctx):
     embed=discord.Embed(title=":book: Help", description="These are the commands and how to use them, please keep in mind that the list is very big!", color=0xe5ff24)
-    embed.add_field(name=":globe_with_meridians: f-request", value="Looks up content on e621 or e926\nUsage: f-request nsfw dick | f-request sfw random", inline=False)
-    embed.add_field(name="<:impressive:744230514994708590> f-meme", value="Looks up a meme on e926\nUsage: f-meme", inline=False)
+    
+    embed.add_field(name="\n<:die:747162817714454570>", value="**e621/e926**", inline=False)
+    
+    embed.add_field(name=":globe_with_meridians: f-request", value="Looks up content on e621 or e926\nUsage: f-request nsfw dick | f-request sfw random", inline=True)
+    embed.add_field(name="<:impressive:744230514994708590> f-meme", value="Looks up a meme on e926\nUsage: f-meme", inline=True)
+    
+    embed.add_field(name="\n:microphone:", value="**Voice Fun**", inline=False)
+
+    embed.add_field(name="<:gooz:747231402285727776> f-moan", value="Moans on your voice channel\nUsage: f-moan", inline=True)
+    embed.add_field(name="<:hot:747160250158940180> f-owo", value="OwOs on your voice channel\nUsage: f-owo", inline=True)
+    embed.add_field(name="<:legocity:747163763085672518> f-rap", value="Raps on your voice channel\nUsage: f-rap", inline=True)
+    embed.add_field(name=":stop_button: f-disconnect", value="Disconnects from voice channel\nUsage: f-disconnect", inline=True)
+
+    embed.add_field(name="\n:bookmark_tabs:", value="**Text Fun**", inline=False)
+
+    embed.add_field(name=":speech_left: f-chat", value="Chats with a very dumb AI\nUsage: f-chat hello, how are you doing?", inline=True)
+    embed.add_field(name=":satellite_orbital: f-obliterate", value="Obliterate your target's DM\nUsage: f-obliterate @Bugadinho#5769", inline=True)
+    embed.add_field(name=":airplane: f-airstrike", value="Airstrikes your target's DM\nUsage: f-airstrike @Bugadinho#5769", inline=True)
+    embed.add_field(name="<:fapgamer:747188878951186433> f-cumlord", value="Tells you who is the daily cumlord\nUsage: f-cumlord", inline=True)
+    embed.add_field(name=":gun: f-roulette", value="A innocent russian roulette game\nUsage: f-roulette", inline=True)
+    embed.add_field(name=":thinking: f-howmuch", value="Tells how much of a something you are\nUsage: f-howmuch alive", inline=True)
+    embed.add_field(name=":dog: f-whichanimal", value="Tells you which animal you are\nUsage: f-whichanimal", inline=True)
+    embed.add_field(name="<:subway:744236763735785483> f-yiff", value="Yiffs your target\nUsage: f-yiff @Bugadinho#5769", inline=True)
+    embed.add_field(name=":fox: f-pounce", value="Pounces your target\nUsage: f-pounce @Bugadinho#5769", inline=True)
+
     await ctx.message.channel.send(embed=embed)
 
 @bot.command()
@@ -210,7 +249,8 @@ async def request(ctx, type, *, tags):
    
         ReqJson = Req.json()
         if(len(ReqJson["posts"]) == 0):
-            return await ctx.message.channel.send('Nothing found!')
+            embed=discord.Embed(title="Error!", description="No post was found!", color=0xff0000)
+            return await ctx.message.channel.send(embed=embed)
 
         Post = ReqJson["posts"][0]["file"]["url"]
         #print(f"Here is your {type} yiff: {Post}\nURL: <https://e621.net/posts/{ReqJson['posts'][0]['id']}>")
@@ -258,16 +298,24 @@ async def yiff(ctx, yiffed):
 @bot.command()
 async def measuredick(ctx):
     random.seed(ctx.message.author.id * 2)
-    await ctx.message.channel.send("Your cock is about " + str(random.randint(0,200) / 10) + "cm")
+
+    embed=discord.Embed(title="Cock Measurer 3000", description="Your cock is about " + str(random.randint(0,200) / 10) + "cm", color=0x8000ff)
+    await ctx.message.channel.send(embed=embed)
+
+    #await ctx.message.channel.send("Your cock is about " + str(random.randint(0,200) / 10) + "cm")
 
 @bot.command()
 async def cumlord(ctx):
     if (ctx.message.channel.type is discord.ChannelType.private):
         embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
+    
     random.seed(datetime.combine(date.today(), datetime.min.time()).replace(tzinfo=timezone.utc).timestamp())
     serverUsers = ctx.message.guild.members
-    await ctx.message.channel.send("The daily cumlord is " + serverUsers[random.randint(0,len(serverUsers)-1)].mention)
+
+    embed=discord.Embed(title="Daily cumlord", description="The daily cumlord is " + serverUsers[random.randint(0,len(serverUsers)-1)].mention, color=0x8000ff)
+    await ctx.message.channel.send(embed=embed)
+    #await ctx.message.channel.send("The daily cumlord is " + serverUsers[random.randint(0,len(serverUsers)-1)].mention)
 
 @bot.command()
 async def whichanimal(ctx):
@@ -278,19 +326,26 @@ async def whichanimal(ctx):
 async def roulette(ctx):
     bullet = random.randint(1,6)
     if (bullet == 6):
-        await ctx.message.channel.send("You lost!")
+        embed=discord.Embed(title="Russian Roulette", description="You lost!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
     else:
-        await ctx.message.channel.send("You win!")
+        embed=discord.Embed(title="Russian Roulette", description="You won!", color=0x00ff88)
+        return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
 async def chat(ctx, *, spoke):
     await ctx.message.channel.send(chatbot.get_response(spoke))
 
 @bot.command()
-async def howmuch(ctx, bobao):
+async def howmuch(ctx, stuff):
+    bobao = stuff
+
     random.seed(ctx.message.author.id * int(bobao, 36) * 2)
     bobin = random.randint(0,100)
-    await ctx.message.channel.send(ctx.message.author.mention + " is " + str(bobin) + "% " + bobao)
+
+    embed=discord.Embed(title="How much?", description=ctx.message.author.mention + " is " + str(bobin) + "% " + bobao, color=0x8000ff)
+    await ctx.message.channel.send(embed=embed)
+
     if (bobin == 100):
         await ctx.invoke(bot.get_command('request'), type='sfw', tags=bobao)
 
@@ -325,7 +380,8 @@ async def rap(ctx):
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
-        return await ctx.message.channel.send("Something is already playing, please wait!")
+        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
 async def nokia(ctx):
@@ -344,7 +400,8 @@ async def nokia(ctx):
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
-        return await ctx.message.channel.send("Something is already playing, please wait!")
+        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
 async def moan(ctx):
@@ -363,7 +420,8 @@ async def moan(ctx):
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
-        return await ctx.message.channel.send("Something is already playing, please wait!")
+        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
 async def owo(ctx):
@@ -382,7 +440,8 @@ async def owo(ctx):
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
-        return await ctx.message.channel.send("Something is already playing, please wait!")
+        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
 async def obliterate(ctx, obliterated: discord.User):
@@ -412,6 +471,8 @@ async def obliterate(ctx, obliterated: discord.User):
     embed=discord.Embed(color=0x8000ff)
     embed.set_image(url="https://media1.giphy.com/media/3K0D1Dkqh9MOmLSjzW/giphy.gif")
 
+    oldnickname = obliterated.display_name
+
     try:
         await obliterated.dm_channel.send("You have been obliterated by " + ctx.message.author.name + "!")
         message1 = await obliterated.dm_channel.send(Post)
@@ -426,7 +487,9 @@ async def obliterate(ctx, obliterated: discord.User):
         return await ctx.message.channel.send("Orbital strike has failed!")
 
 @bot.command()
-async def airstrike(ctx, obliterated: discord.User):
+async def airstrike(ctx, airstriked: discord.User):
+    obliterated = airstriked
+
     if (ctx.message.channel.type is discord.ChannelType.private):
         embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
