@@ -214,6 +214,7 @@ async def info(ctx):
     result = subprocess.run(['git', 'rev-parse HEAD'], stdout=subprocess.PIPE)
 
     embed.add_field(name="Commit ID", value=result.stdout.decode('utf-8'), inline=False)
+    
     await ctx.message.channel.send(embed=embed)
 
 @bot.command()
