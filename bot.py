@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 
 # FurBot by BugadinhoGamers (https://github.com/BugadinhoGamers/FurBot)
