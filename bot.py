@@ -1,9 +1,12 @@
+#!/usr/bin/python3
+
 # FurBot by BugadinhoGamers (https://github.com/BugadinhoGamers/FurBot)
 # Licensed under GPLv3.0
 
 import io
 import aiohttp
 import os
+import sys
 import discord
 import asyncio
 from discord.ext import commands, tasks
@@ -47,6 +50,7 @@ chatbot = ChatBot(
 CringeList = ["fortnite", "undertale"]
 AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
 MoanList = ["moan 1.mp3", "moan 2.mp3", "moan 3.mp3", "moan 4.mp3", "moan 5.mp3", "moan 6.mp3"]
+MantainerList = [306540670724734976, 413108421790007313]
 
 CumList = [338468574970511371, 228659079420182539]
 
@@ -540,5 +544,23 @@ async def disconnect(ctx):
             await guild.voice_client.disconnect()
     except:
         pass
+
+@bot.command()
+async def update(ctx):
+    if (ctx.message.author.id not in MantainerList):
+        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    await bot.close()
+    os.system("git pull")
+    os.execv(__file__, sys.argv)
+
+@bot.command()
+async def restart(ctx):
+    if (ctx.message.author.id not in MantainerList):
+        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    await bot.close()
+    os.execv(__file__, sys.argv)
+
 if __name__ == "__main__": 
     bot.run(token)
