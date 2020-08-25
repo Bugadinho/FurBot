@@ -288,15 +288,17 @@ async def meme(ctx):
     await ctx.invoke(bot.get_command('request'), type='sfw', tags="meme")
 
 @bot.command()
-async def pounce(ctx, pounced):
+async def pounce(ctx, *, pounced):
     embed=discord.Embed(color=0x8000ff)
     embed.set_image(url="https://static1.e926.net/data/06/65/066570f0b541f23c8d03d1956a590167.gif")
     await ctx.message.channel.send(content=ctx.message.author.mention + " pounced on " + pounced,embed=embed)
 
 @bot.command()
-async def yiff(ctx, yiffed):
+async def yiff(ctx, *, yiffed):
+    gif = "https://static1.e926.net/data/07/a9/07a9e5aa8770e86c1b58e117e6deee4a.png"
+
     embed=discord.Embed(color=0x8000ff)
-    embed.set_image(url="https://logos-download.com/wp-content/uploads/2016/10/Python_logo_wordmark.png")
+    embed.set_image(url=gif)
     await ctx.message.channel.send(content=ctx.message.author.mention + " yiffed " + yiffed,embed=embed)
 
 @bot.command()
