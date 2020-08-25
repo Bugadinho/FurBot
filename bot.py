@@ -9,6 +9,7 @@ import os
 import sys
 import discord
 import asyncio
+import subprocess
 from discord.ext import commands, tasks
 from discord.utils import get
 from discord import Game
@@ -209,6 +210,10 @@ async def info(ctx):
     embed.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) + "%", inline=True)
     embed.add_field(name="RAM Usage", value=str(psutil.virtual_memory().percent) + "%", inline=True)
     embed.add_field(name="Lead Programmer", value="*Bugadinho#5769*", inline=False)
+
+    result = subprocess.run(['git', 'rev-parse HEAD'], stdout=subprocess.PIPE)
+
+    embed.add_field(name="Commit ID", value=result.stdout.decode('utf-8'), inline=False)
     await ctx.message.channel.send(embed=embed)
 
 @bot.command()
