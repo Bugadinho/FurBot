@@ -23,25 +23,17 @@ import psutil
 import random
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
+import mysql.connector
 import logging
 
 logger = logging.getLogger()
 logger.setLevel(logging.CRITICAL)
 
-OPUS_LIBS = ['libopus-0.x86.dll', 'libopus-0.x64.dll', 'libopus-0.dll', 'libopus.so.0', 'libopus.0.dylib']
+with open('../token.txt', 'r') as file:
+    token = file.read().replace('\n', '')\
 
-def load_opus_lib(opus_libs=OPUS_LIBS):
-    if opus.is_loaded():
-        return True
-
-    for opus_lib in opus_libs:
-        try:
-            opus.load_opus(opus_lib)
-            return
-        except OSError:
-            pass
-
-        raise RuntimeError('Could not load an opus lib. Tried %s' % (', '.join(opus_libs)))
+with open('../dbpassword.txt', 'r') as file:
+    dbpassword = file.read().replace('\n', '')
 
 chatbot = ChatBot(
     'FurBot',
@@ -54,9 +46,6 @@ MoanList = ["moan 1.mp3", "moan 2.mp3", "moan 3.mp3", "moan 4.mp3", "moan 5.mp3"
 MantainerList = [306540670724734976, 413108421790007313]
 
 CumList = [338468574970511371, 228659079420182539]
-
-with open('../token.txt', 'r') as file:
-    token = file.read().replace('\n', '')
 
 headers = {"User-Agent":"FurBot/1.0 (API Usage by Bugman69 on E621)"}
 
@@ -218,6 +207,37 @@ async def info(ctx):
     await ctx.message.channel.send(embed=embed)
 
 @bot.command()
+async def balance(ctx):
+    botdb = mysql.connector.connect(
+        host="192.168.0.169",
+        user="root",
+        password=dbpassword,
+        database="FurBot"
+    )
+    mycursor = botdb.cursor()
+
+    sql = "SELECT * FROM Members WHERE ID = %s"
+    val = (ctx.message.author.id, )
+
+    mycursor.execute(sql, val)
+
+    myresult = mycursor.fetchall()
+
+    if myresult == []:
+        await ctx.message.channel.send("Your account is not associated with a balance, creating one...")
+        sql = "INSERT INTO Members (ID, Credits, HornyJail, Likeness) VALUES (%s, %s, %s, %s)"
+        val = (ctx.message.author.id, 0, 0, 50)
+        mycursor.execute(sql, val)
+        botdb.commit()
+        return await ctx.message.channel.send("Balance created!")
+
+    embed=discord.Embed(title=ctx.message.author.name + "'s balance", description=str(myresult[0][1]) + " credits", color=0x80ecff)
+    
+    await ctx.message.channel.send(embed=embed)
+
+    
+
+@bot.command()
 async def request(ctx, type, *, tags):
     if(ctx.message.author.id in CumList):
         print("Blacklisted user attempted to use bot")
@@ -336,12 +356,42 @@ async def whichanimal(ctx):
 
 @bot.command()
 async def roulette(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
+    botdb = mysql.connector.connect(
+        host="192.168.0.169",
+        user="root",
+        password=dbpassword,
+        database="FurBot"
+    )
+
+    mycursor = botdb.cursor()
+
+    sql = "SELECT * FROM Members WHERE ID = %s"
+    val = (ctx.message.author.id, )
+
+    mycursor.execute(sql, val)
+
+    myresult = mycursor.fetchall()
+
+    curCredits = myresult[0][1]
+    
+    sql = "UPDATE Members SET Credits = %s WHERE ID = %s"
+
     bullet = random.randint(1,6)
     if (bullet == 6):
         embed=discord.Embed(title="Russian Roulette", description="You lost!", color=0xff0000)
+        val = (max(curCredits - 60, 0) , ctx.message.author.id, )
+        mycursor.execute(sql, val)
+        botdb.commit()
         return await ctx.message.channel.send(embed=embed)
     else:
         embed=discord.Embed(title="Russian Roulette", description="You won!", color=0x00ff88)
+        val = (max(curCredits + 10, 0) , ctx.message.author.id, )
+        mycursor.execute(sql, val)
+        botdb.commit()
         return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
@@ -363,11 +413,48 @@ async def howmuch(ctx, stuff):
 
 @bot.event
 async def on_message(message):
+    botdb = mysql.connector.connect(
+        host="192.168.0.169",
+        user="root",
+        password=dbpassword,
+        database="FurBot"
+    )
+
+    mycursor = botdb.cursor()
+
+    sql = "SELECT * FROM Members WHERE ID = %s"
+    val = (message.author.id, )
+
+    mycursor.execute(sql, val)
+
+    myresult = mycursor.fetchall()
+
+    if myresult == []:
+        sql = "INSERT INTO Members (ID, Credits, HornyJail, Likeness) VALUES (%s, %s, %s, %s)"
+        val = (message.author.id, 0, 0, 50)
+        mycursor.execute(sql, val)
+        print("nodb")
+        botdb.commit()
+    
     if any(word in message.content for word in CringeList):
+        curCredits = myresult[0][1]
+        sql = "UPDATE Members SET Credits = %s WHERE ID = %s"
+        val = (max(curCredits - 10, 0), message.author.id, )
+        print(curCredits)
+
+        mycursor.execute(sql, val)
+        botdb.commit()
+
+        
         await message.delete()
         return await message.channel.send(message.author.mention + ", bruh you just posted cringe, you are gonna lose credits!")
+
+    if myresult[0][3] != None:
+        like = myresult[0][3]
+    else:
+        like = 100
     
-    anger = random.randint(1,10000)
+    anger = random.randint(1,(100 * ( 1 + like)))
 
     if (anger == 1):
         await message.delete()
@@ -461,6 +548,32 @@ async def obliterate(ctx, obliterated: discord.User):
         embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
     
+    botdb = mysql.connector.connect(
+        host="192.168.0.169",
+        user="root",
+        password=dbpassword,
+        database="FurBot"
+    )
+
+    mycursor = botdb.cursor()
+
+    sql = "SELECT * FROM Members WHERE ID = %s"
+    val = (ctx.message.author.id, )
+
+    mycursor.execute(sql, val)
+
+    myresult = mycursor.fetchall()
+
+    curCredits = myresult[0][1]
+    if (curCredits < 200):
+        embed=discord.Embed(title="Error!", description="Not enough credits!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
+    sql = "UPDATE Members SET Credits = %s WHERE ID = %s"
+    val = (curCredits - 200, ctx.message.author.id, )
+
+    mycursor.execute(sql, val)
+    
     RequestSTR = "posts.json?tags=order:random"
     RequestSTR += "+-bestiality+-pony+-watersports+-gore+-scat+-young+-loli+-my_little_pony+-vore+-frienship_is_magic+-nightmare_fuel"
     link = "https://e621.net/"
@@ -495,7 +608,9 @@ async def obliterate(ctx, obliterated: discord.User):
         await message1.delete()
         await message2.delete()
         await message3.delete()
+        botdb.commit()
     except:
+        print("uh")
         return await ctx.message.channel.send("Orbital strike has failed!")
 
 @bot.command()
@@ -505,6 +620,32 @@ async def airstrike(ctx, airstriked: discord.User):
     if (ctx.message.channel.type is discord.ChannelType.private):
         embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
+
+    botdb = mysql.connector.connect(
+        host="192.168.0.169",
+        user="root",
+        password=dbpassword,
+        database="FurBot"
+    )
+
+    mycursor = botdb.cursor()
+
+    sql = "SELECT * FROM Members WHERE ID = %s"
+    val = (ctx.message.author.id, )
+
+    mycursor.execute(sql, val)
+
+    myresult = mycursor.fetchall()
+
+    curCredits = myresult[0][1]
+    if (curCredits < 100):
+        embed=discord.Embed(title="Error!", description="Not enough credits!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
+    sql = "UPDATE Members SET Credits = %s WHERE ID = %s"
+    val = (curCredits - 100, ctx.message.author.id, )
+
+    mycursor.execute(sql, val)
     
     RequestSTR = "posts.json?tags=order:random"
     RequestSTR += "+-bestiality+-pony+-watersports+-gore+-scat+-young+-loli+-my_little_pony+-vore+-frienship_is_magic+-nightmare_fuel"
@@ -534,6 +675,7 @@ async def airstrike(ctx, airstriked: discord.User):
         await ctx.message.channel.send(content=ctx.message.author.mention + " has airstriked " + obliterated.mention + "!",embed=embed)
         await asyncio.sleep(1) 
         await message1.delete()
+        botdb.commit()
     except:
         return await ctx.message.channel.send("Airstrike has failed!")
 
