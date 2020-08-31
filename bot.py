@@ -483,6 +483,26 @@ async def rap(ctx):
         return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
+async def doom(ctx):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+
+    guild = ctx.guild
+    author = ctx.message.author
+    voice_channel = author.voice.channel
+    try:
+        vc = await voice_channel.connect()
+    except:
+        vc = guild.voice_client
+    audio_source = discord.FFmpegPCMAudio('doom.mp3')
+    if not vc.is_playing():
+        vc.play(audio_source, after=None)
+    else:
+        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+
+@bot.command()
 async def nokia(ctx):
     if (ctx.message.channel.type is discord.ChannelType.private):
         embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
