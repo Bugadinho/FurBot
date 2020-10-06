@@ -42,14 +42,15 @@ chatbot = ChatBot(
 )
 
 BlackList = []
+
 CringeList = ["fortnite", "undertale"]
 AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
+
 MoanList = ["media/moan 1.ogg", "media/moan 2.ogg", "media/moan 3.ogg", "media/moan 4.ogg", "media/moan 5.ogg", "media/moan 6.ogg"]
+owoList = ["media/OWO_1.ogg", "media/OWO_2.ogg", "media/OWO_3.ogg"]
+
 MantainerList = [306540670724734976, 413108421790007313]
-
 CumList = [338468574970511371, 228659079420182539]
-
-headers = {"User-Agent":"FurBot/1.0 (API Usage by Bugman69 on E621)"}
 
 bot = commands.Bot(command_prefix = 'f-')
 bot.remove_command('help')
@@ -72,6 +73,29 @@ async def vc_task():
                     await guild.voice_client.disconnect()
             except:
                 pass
+
+async def VoicePlay(ctx, audiopath):
+    if (ctx.message.channel.type is discord.ChannelType.private):
+        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+
+    guild = ctx.guild
+    author = ctx.message.author
+    voice_channel = author.voice.channel
+
+    try:
+        vc = await voice_channel.connect()
+    except:
+        vc = guild.voice_client
+    
+    audio_source = discord.FFmpegOpusAudio(audiopath)
+
+    if not vc.is_playing():
+        vc.play(audio_source, after=None)
+    else:
+        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
@@ -436,103 +460,23 @@ async def on_message(message):
 
 @bot.command()
 async def rap(ctx):
-    if (ctx.message.channel.type is discord.ChannelType.private):
-        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
-
-    guild = ctx.guild
-    author = ctx.message.author
-    voice_channel = author.voice.channel
-    try:
-        vc = await voice_channel.connect()
-    except:
-        vc = guild.voice_client
-    audio_source = discord.FFmpegOpusAudio('media/bad furry rap.ogg')
-    if not vc.is_playing():
-        vc.play(audio_source, after=None)
-    else:
-        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
+    await VoicePlay(ctx, 'media/bad furry rap.ogg')
 
 @bot.command()
 async def doom(ctx):
-    if (ctx.message.channel.type is discord.ChannelType.private):
-        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
-
-    guild = ctx.guild
-    author = ctx.message.author
-    voice_channel = author.voice.channel
-    try:
-        vc = await voice_channel.connect()
-    except:
-        vc = guild.voice_client
-    audio_source = discord.FFmpegOpusAudio('media/doom.ogg')
-    if not vc.is_playing():
-        vc.play(audio_source, after=None)
-    else:
-        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
+    await VoicePlay(ctx, 'media/doom.ogg')
 
 @bot.command()
 async def nokia(ctx):
-    if (ctx.message.channel.type is discord.ChannelType.private):
-        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
-
-    guild = ctx.guild
-    author = ctx.message.author
-    voice_channel = author.voice.channel
-    try:
-        vc = await voice_channel.connect()
-    except:
-        vc = guild.voice_client
-    audio_source = discord.FFmpegOpusAudio('media/nokia_ringtone.ogg')
-    if not vc.is_playing():
-        vc.play(audio_source, after=None)
-    else:
-        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
+    await VoicePlay(ctx, 'media/nokia_ringtone.ogg')
 
 @bot.command()
 async def moan(ctx):
-    if (ctx.message.channel.type is discord.ChannelType.private):
-        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
-    
-    guild = ctx.guild
-    author = ctx.message.author
-    voice_channel = author.voice.channel
-    try:
-        vc = await voice_channel.connect()
-    except:
-        vc = guild.voice_client
-    audio_source = discord.FFmpegOpusAudio(random.choice(MoanList))
-    if not vc.is_playing():
-        vc.play(audio_source, after=None)
-    else:
-        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
+    await VoicePlay(ctx, random.choice(MoanList))
 
 @bot.command()
 async def owo(ctx):
-    if (ctx.message.channel.type is discord.ChannelType.private):
-        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
-    
-    guild = ctx.guild
-    author = ctx.message.author
-    voice_channel = author.voice.channel
-    try:
-        vc = await voice_channel.connect()
-    except:
-        vc = guild.voice_client
-    audio_source = discord.FFmpegOpusAudio(random.choice(["media/OWO_1.ogg", "media/OWO_2.ogg", "media/OWO_3.ogg"]))
-    if not vc.is_playing():
-        vc.play(audio_source, after=None)
-    else:
-        embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
+    await VoicePlay(ctx, random.choice(owoList))
 
 @bot.command()
 async def obliterate(ctx, obliterated: discord.User):
