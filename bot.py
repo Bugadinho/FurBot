@@ -67,7 +67,7 @@ bot.remove_command('help')
 
 IsAlive = True
 
-Version = subprocess.run('git rev-parse HEAD', stdout=subprocess.PIPE).stdout.decode("utf-8") 
+#Version = subprocess.run('git rev-parse HEAD', stdout=subprocess.PIPE).stdout.decode("utf-8") 
 
 async def status_task():
     while IsAlive:
@@ -201,7 +201,7 @@ async def info(ctx):
     embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
 
     embed.add_field(name="Platform", value=str(platform.platform()), inline=False)
-    embed.add_field(name="Version", value=str(Version), inline=False)
+    #embed.add_field(name="Version", value=str(Version), inline=False)
     #embed.add_field(name="Lead Programmer", value="*Bugadinho#5769*", inline=False)
 
     #result = subprocess.run(['git', 'rev-parse HEAD'], stdout=subprocess.PIPE)
