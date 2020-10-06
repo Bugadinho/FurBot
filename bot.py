@@ -8,6 +8,7 @@ import io
 import aiohttp
 import os
 import sys
+import platform
 import discord
 import asyncio
 import subprocess
@@ -65,6 +66,8 @@ bot = commands.Bot(command_prefix = 'f-')
 bot.remove_command('help')
 
 IsAlive = True
+
+Version = subprocess.run('git rev-parse HEAD', stdout=subprocess.PIPE).stdout.decode("utf-8") 
 
 async def status_task():
     while IsAlive:
@@ -190,10 +193,16 @@ async def help(ctx):
 @bot.command()
 async def info(ctx):
     embed=discord.Embed(title="FurBot", url="https://github.com/BugadinhoGamers/FurBot", description="The glorified e621 browser!", color=0x80ecff)
+    
     embed.add_field(name="Latency", value=str(int(bot.latency * 1000)) + "ms", inline=True)
     embed.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) + "%", inline=True)
     embed.add_field(name="RAM Usage", value=str(psutil.virtual_memory().percent) + "%", inline=True)
-    embed.add_field(name="Lead Programmer", value="*Bugadinho#5769*", inline=False)
+
+    embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+
+    embed.add_field(name="Platform", value=str(platform.platform()), inline=False)
+    embed.add_field(name="Version", value=str(Version), inline=False)
+    #embed.add_field(name="Lead Programmer", value="*Bugadinho#5769*", inline=False)
 
     #result = subprocess.run(['git', 'rev-parse HEAD'], stdout=subprocess.PIPE)
 
