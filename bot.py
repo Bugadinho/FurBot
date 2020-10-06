@@ -54,9 +54,11 @@ headers = {"User-Agent":"FurBot/1.0 (API Usage by Bugman69 on E621)"}
 bot = commands.Bot(command_prefix = 'f-')
 bot.remove_command('help')
 
+IsAlive = True
+
 async def status_task():
-    while True:
-        await bot.change_presence(activity=discord.Game(name="f-help | Currently on " + str(len(bot.guilds)) + " servers!"))
+    while IsAlive:
+        await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="f-help | Currently on " + str(len(bot.guilds)) + " servers!"))
         await asyncio.sleep(60)
 
 async def vc_task():
@@ -697,6 +699,12 @@ async def disconnect(ctx):
 
 @bot.command()
 async def update(ctx):
+    await ctx.message.channel.send("Updating and restarting bot!")
+
+    IsAlive = False
+
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Updating..."))
+
     if (ctx.message.author.id not in MantainerList):
         embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
@@ -706,6 +714,12 @@ async def update(ctx):
 
 @bot.command()
 async def restart(ctx):
+    await ctx.message.channel.send("Restarting bot!")
+
+    IsAlive = False
+
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Restarting..."))
+
     if (ctx.message.author.id not in MantainerList):
         embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
