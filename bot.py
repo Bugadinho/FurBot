@@ -105,8 +105,6 @@ async def VoicePlay(ctx, audiopath):
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
     bot.loop.create_task(status_task())
-
-    print(bot.heartbeat_timeout)
     
     for guild in bot.guilds:
         try:
