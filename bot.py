@@ -44,7 +44,7 @@ chatbot = ChatBot(
 BlackList = []
 CringeList = ["fortnite", "undertale"]
 AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
-MoanList = ["media/moan 1.mp3", "media/moan 2.mp3", "media/moan 3.mp3", "media/moan 4.mp3", "media/moan 5.mp3", "media/moan 6.mp3"]
+MoanList = ["media/moan 1.ogg", "media/moan 2.ogg", "media/moan 3.ogg", "media/moan 4.ogg", "media/moan 5.ogg", "media/moan 6.ogg"]
 MantainerList = [306540670724734976, 413108421790007313]
 
 CumList = [338468574970511371, 228659079420182539]
@@ -447,7 +447,7 @@ async def rap(ctx):
         vc = await voice_channel.connect()
     except:
         vc = guild.voice_client
-    audio_source = discord.FFmpegPCMAudio('media/bad furry rap.mp3')
+    audio_source = discord.FFmpegOpusAudio('media/bad furry rap.ogg')
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
@@ -467,7 +467,7 @@ async def doom(ctx):
         vc = await voice_channel.connect()
     except:
         vc = guild.voice_client
-    audio_source = discord.FFmpegPCMAudio('media/doom.mp3')
+    audio_source = discord.FFmpegOpusAudio('media/doom.ogg')
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
@@ -487,7 +487,7 @@ async def nokia(ctx):
         vc = await voice_channel.connect()
     except:
         vc = guild.voice_client
-    audio_source = discord.FFmpegPCMAudio('media/nokia_ringtone.mp3')
+    audio_source = discord.FFmpegOpusAudio('media/nokia_ringtone.ogg')
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
@@ -507,7 +507,7 @@ async def moan(ctx):
         vc = await voice_channel.connect()
     except:
         vc = guild.voice_client
-    audio_source = discord.FFmpegPCMAudio(random.choice(MoanList))
+    audio_source = discord.FFmpegOpusAudio(random.choice(MoanList))
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
@@ -527,7 +527,7 @@ async def owo(ctx):
         vc = await voice_channel.connect()
     except:
         vc = guild.voice_client
-    audio_source = discord.FFmpegPCMAudio(random.choice(["media/OWO_1.mp3", "media/OWO_2.mp3", "media/OWO_3.mp3"]))
+    audio_source = discord.FFmpegOpusAudio(random.choice(["media/OWO_1.ogg", "media/OWO_2.ogg", "media/OWO_3.ogg"]))
     if not vc.is_playing():
         vc.play(audio_source, after=None)
     else:
