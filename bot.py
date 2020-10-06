@@ -25,6 +25,7 @@ from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 import mysql.connector
 import logging
+import py621
 
 logger = logging.getLogger()
 logger.setLevel(logging.CRITICAL)
@@ -40,6 +41,7 @@ chatbot = ChatBot(
     trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
 )
 
+BlackList = []
 CringeList = ["fortnite", "undertale"]
 AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
 MoanList = ["moan 1.mp3", "moan 2.mp3", "moan 3.mp3", "moan 4.mp3", "moan 5.mp3", "moan 6.mp3"]
@@ -203,57 +205,67 @@ async def request(ctx, type, *, tags):
         return await ctx.message.channel.send(embed=embed)
     
     async with ctx.message.channel.typing():
-        if(tags == "random"):
-            RequestSTR = "posts.json?tags=order:random"
-        else:
-            RequestSTR = "posts.json?tags=order:random+" + tags.replace(' ', '+')
-        RequestSTR += "+-bestiality+-pony+-watersports+-gore+-scat+-young+-loli+-my_little_pony+-vore+-frienship_is_magic+-nightmare_fuel"
+        Safe = True
+        Tags = ["order:random"]
 
         if(type == "sfw"):
             link = "https://e926.net/"
             prefix = ""
             colormaster = 0x00ff88
+            Safe = True
         elif(type == "nsfw"):
             if (ctx.message.channel.is_nsfw()):
                 link = "https://e621.net/"
-                RequestSTR = RequestSTR + "+rating:explicit"
                 prefix = "SPOILER_"
                 colormaster = 0x8000ff
+                Safe = False
+                Tags.append("rating:explicit")
             elif (ctx.message.channel.type is discord.ChannelType.private):
                 link = "https://e621.net/"
-                RequestSTR = RequestSTR + "+rating:explicit"
                 prefix = "SPOILER_"
                 colormaster = 0x8000ff
+                Safe = False
+                Tags.append("rating:explicit")
             else:
                 embed=discord.Embed(title="Error!", description="NSFW is disabled on this channel!", color=0xff0000)
                 return await ctx.message.channel.send(embed=embed)
         else:
             link = "https://e926.net/"
-            prefix = ""
             colormaster = 0x00ff88
-        #+rating:explicit
+            Safe = True
+        
+        for Tag in tags.split():
+            Tags.append(Tag)
+        
+        for Tag in BlackList:
+            Tags.append("-" + Tag)
 
-        Req = requests.get(link + RequestSTR + "&limit=1", headers=headers)
-   
-        ReqJson = Req.json()
-        if(len(ReqJson["posts"]) == 0):
+        loop = asyncio.get_event_loop()
+        asyncRequest = loop.run_in_executor(None, py621.public.getPosts, Safe, Tags, 1, 1, False)
+
+        #Posts = py621.public.getPosts(Safe, Tags, 1, 1, False)
+        Posts = await asyncRequest
+
+        if(len(Posts) == 0):
             embed=discord.Embed(title="Error!", description="No post was found!", color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
 
-        Post = ReqJson["posts"][0]["file"]["url"]
-        #print(f"Here is your {type} yiff: {Post}\nURL: <https://e621.net/posts/{ReqJson['posts'][0]['id']}>")
-        Link = link + (f"posts/{ReqJson['posts'][0]['id']}")
+        Post = Posts[0]
+
+        PostURL = Post["file"]["url"]
+
+        Link = link + (f"posts/{Post['id']}")
         Link = "<" + Link + ">"
 
-        if ("webm" in Post):
-            await ctx.message.channel.send(Link + "\n" + Post)
-        elif ("avi" in Post):
-            await ctx.message.channel.send(Link + "\n" + Post)
-        elif ("mp4" in Post):
-            await ctx.message.channel.send(Link + "\n" + Post)
+        if ("webm" in PostURL):
+            await ctx.message.channel.send(Link + "\n" + PostURL)
+        elif ("avi" in PostURL):
+            await ctx.message.channel.send(Link + "\n" + PostURL)
+        elif ("mp4" in PostURL):
+            await ctx.message.channel.send(Link + "\n" + PostURL)
         else:
             embed=discord.Embed(title=Link, color=colormaster)
-            embed.set_image(url=Post)
+            embed.set_image(url=PostURL)
             await ctx.message.channel.send(embed=embed)
 
         #await ctx.message.channel.send(Link + "\n" + Post)
@@ -552,15 +564,20 @@ async def obliterate(ctx, obliterated: discord.User):
 
     mycursor.execute(sql, val)
     
-    RequestSTR = "posts.json?tags=order:random"
-    RequestSTR += "+-bestiality+-pony+-watersports+-gore+-scat+-young+-loli+-my_little_pony+-vore+-frienship_is_magic+-nightmare_fuel"
-    link = "https://e621.net/"
-    colormaster = 0x00ff88
-    Req = requests.get(link + RequestSTR + "&limit=1", headers=headers)
-    ReqJson = Req.json()
-    if(len(ReqJson["posts"]) == 0):
+    Tags = ["order:random"]
+    for Tag in BlackList:
+        Tags.append("-" + Tag)
+
+    loop = asyncio.get_event_loop()
+    asyncRequest = loop.run_in_executor(None, py621.public.getPosts, False, Tags, 1, 1, False)
+    
+    Posts = await asyncRequest
+
+    if(len(Posts) == 0):
         return await ctx.message.channel.send("Orbital strike has failed!")
-    Post = ReqJson["posts"][0]["file"]["url"]
+    
+    Post = Posts[0]
+    PostURL = Post["file"]["url"]
 
     try:
         if(obliterated.dm_channel == None):
@@ -578,9 +595,9 @@ async def obliterate(ctx, obliterated: discord.User):
 
     try:
         await obliterated.dm_channel.send("You have been obliterated by " + ctx.message.author.name + "!")
-        message1 = await obliterated.dm_channel.send(Post)
-        message2 = await obliterated.dm_channel.send(Post)
-        message3 = await obliterated.dm_channel.send(Post)
+        message1 = await obliterated.dm_channel.send(PostURL)
+        message2 = await obliterated.dm_channel.send(PostURL)
+        message3 = await obliterated.dm_channel.send(PostURL)
         await ctx.message.channel.send(content=ctx.message.author.mention + " has obliterated " + obliterated.mention + "!",embed=embed)
         await asyncio.sleep(1) 
         await message1.delete()
@@ -624,16 +641,21 @@ async def airstrike(ctx, airstriked: discord.User):
     val = (curCredits - 100, ctx.message.author.id, )
 
     mycursor.execute(sql, val)
+
+    Tags = ["order:random"]
+    for Tag in BlackList:
+        Tags.append("-" + Tag)
+
+    loop = asyncio.get_event_loop()
+    asyncRequest = loop.run_in_executor(None, py621.public.getPosts, False, Tags, 1, 1, False)
     
-    RequestSTR = "posts.json?tags=order:random"
-    RequestSTR += "+-bestiality+-pony+-watersports+-gore+-scat+-young+-loli+-my_little_pony+-vore+-frienship_is_magic+-nightmare_fuel"
-    link = "https://e621.net/"
-    colormaster = 0x00ff88
-    Req = requests.get(link + RequestSTR + "&limit=1", headers=headers)
-    ReqJson = Req.json()
-    if(len(ReqJson["posts"]) == 0):
+    Posts = await asyncRequest
+
+    if(len(Posts) == 0):
         return await ctx.message.channel.send("Airstrike has failed!")
-    Post = ReqJson["posts"][0]["file"]["url"]
+    
+    Post = Posts[0]
+    PostURL = Post["file"]["url"]
 
     try:
         if(obliterated.dm_channel == None):
@@ -649,7 +671,7 @@ async def airstrike(ctx, airstriked: discord.User):
 
     try:
         await obliterated.dm_channel.send("You have been airstriked by " + ctx.message.author.name + "!")
-        message1 = await obliterated.dm_channel.send(Post)
+        message1 = await obliterated.dm_channel.send(PostURL)
         await ctx.message.channel.send(content=ctx.message.author.mention + " has airstriked " + obliterated.mention + "!",embed=embed)
         await asyncio.sleep(1) 
         await message1.delete()
