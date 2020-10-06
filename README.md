@@ -2,7 +2,7 @@
 
 A glorified e621/e926 browser with some fun stuff
 
-## Installation
+## Installation [Linux]
 
 Create a folder for FurBot to reside in and navigate to it
 
@@ -20,10 +20,11 @@ nano token.txt
 To start up the bot, just do the following
 
 ```bash
-python3 FurBot/bot.py
+cd FurBot
+./bot.py
 ```
 
-Add a bot to a Discord server and type in ``f-help`` to get a command list.
+Add the bot to a Discord server and type ``f-help`` in a chat the bot can see to get a command list.
 
 ## Contributing
 Pull requests are welcome. Just make sure they are compatible and fix/add something relevant
