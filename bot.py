@@ -29,8 +29,8 @@ import mysql.connector
 import logging
 import py621
 
-logger = logging.getLogger()
-logger.setLevel(logging.CRITICAL)
+# logger = logging.getLogger()
+# logger.setLevel(logging.DEBUG)
 
 parser = argparse.ArgumentParser(description='A glorified e621 Discord browser!')
 parser.add_argument('--token', type=str,
@@ -51,7 +51,7 @@ chatbot = ChatBot(
     trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
 )
 
-BlackList = []
+BlackList = ["bestiality", "pony", "watersports", "gore", "scat", "young", "loli", "my_little_pony", "vore", "friendship_is_magic", "nightmare_fuel"]
 
 CringeList = ["fortnite", "undertale"]
 AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
@@ -74,18 +74,6 @@ async def status_task():
         await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="f-help | Currently on " + str(len(bot.guilds)) + " servers!"))
         await asyncio.sleep(60)
 
-async def vc_task():
-    while True:
-        await asyncio.sleep(5)
-        for guild in bot.guilds:
-            try:
-                if (guild.voice_client.is_playing()):
-                    pass
-                else:
-                    await guild.voice_client.disconnect()
-            except:
-                pass
-
 async def VoicePlay(ctx, audiopath):
     if (ctx.message.channel.type is discord.ChannelType.private):
         embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
@@ -107,15 +95,32 @@ async def VoicePlay(ctx, audiopath):
     else:
         embed=discord.Embed(title="Error!", description="Something is already playing, please wait!", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
+    
+    while vc.is_playing():
+        await asyncio.sleep(1)
+
+    await vc.disconnect()
 
 @bot.event
 async def on_ready():
     print('Logged in as {0.user}'.format(bot))
     bot.loop.create_task(status_task())
-    bot.loop.create_task(vc_task())
+
+    print(bot.heartbeat_timeout)
+    
+    for guild in bot.guilds:
+        try:
+            if (guild.voice_client.is_playing()):
+                pass
+            else:
+                await guild.voice_client.disconnect()
+        except:
+            pass
 
 @bot.event
 async def on_message_delete(message):
+    # TODO: MAKE THIS FEATURE SERVER AGNOSTIC
+
     if (message.channel.type is discord.ChannelType.private):
         return
     if (message.guild.id != 540651642463453253):
@@ -131,6 +136,8 @@ async def on_message_delete(message):
 
 @bot.event
 async def on_member_join(member):
+    # TODO: MAKE THIS FEATURE SERVER AGNOSTIC
+
     if (member.guild.id != 540651642463453253):
         return
     
@@ -139,6 +146,8 @@ async def on_member_join(member):
 
 @bot.event
 async def on_member_remove(member):
+    # TODO: MAKE THIS FEATURE SERVER AGNOSTIC
+
     if (member.guild.id != 540651642463453253):
         return
     
@@ -650,6 +659,7 @@ async def disconnect(ctx):
         return await ctx.message.channel.send(embed=embed)
     
     guild = ctx.message.guild
+
     try:
         if (guild.voice_client.is_playing()):
             await guild.voice_client.stop()
