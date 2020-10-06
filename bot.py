@@ -29,8 +29,8 @@ import mysql.connector
 import logging
 import py621
 
-# logger = logging.getLogger()
-# logger.setLevel(logging.DEBUG)
+logger = logging.getLogger()
+logger.setLevel(logging.CRITICAL)
 
 parser = argparse.ArgumentParser(description='A glorified e621 Discord browser!')
 parser.add_argument('--token', type=str,
