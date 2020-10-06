@@ -3,6 +3,7 @@
 # FurBot by BugadinhoGamers (https://github.com/BugadinhoGamers/FurBot)
 # Licensed under GPLv3.0
 
+import argparse
 import io
 import aiohttp
 import os
@@ -30,8 +31,16 @@ import py621
 logger = logging.getLogger()
 logger.setLevel(logging.CRITICAL)
 
-with open('../token.txt', 'r') as file:
-    token = file.read().replace('\n', '')\
+parser = argparse.ArgumentParser(description='A glorified e621 Discord browser!')
+parser.add_argument('--token', type=str,
+                   help='Specify token for out-of-loop execution')
+args = parser.parse_args()
+
+if args.token is not None:
+    token = args.token
+else:
+    with open('../token.txt', 'r') as file:
+        token = file.read().replace('\n', '')\
 
 with open('../dbpassword.txt', 'r') as file:
     dbpassword = file.read().replace('\n', '')
