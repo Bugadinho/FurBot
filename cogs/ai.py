@@ -2,6 +2,7 @@
 # Licensed under GPLv3.0
 
 import discord
+import asyncio
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 from discord.ext import commands
@@ -18,7 +19,7 @@ class AI(commands.Cog):
 
     @commands.command()
     async def chat(self, ctx, *, spoke):
-        await ctx.message.channel.send(chatbot.get_response(spoke))
+        await ctx.message.channel.send(await asyncio.get_event_loop().run_in_executor(None, chatbot.get_response, spoke))
 
 def setup(bot):
     bot.add_cog(AI(bot))
