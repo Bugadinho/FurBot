@@ -224,6 +224,13 @@ class Economy(commands.Cog):
         except:
             print("uh")
             return await ctx.message.channel.send("Orbital strike has failed!")
+    
+    @commands.command()
+    async def MoneyAdd(self, ctx, id, amount):
+        if (ctx.message.author.id not in self.bot.MantainerList):
+            embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+            return await ctx.message.channel.send(embed=embed)
+        await self.GiveCredits(int(amount), id)
 
 def setup(bot):
     bot.add_cog(Economy(bot))
