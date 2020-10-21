@@ -128,6 +128,8 @@ async def help(ctx):
 async def info(ctx):
     embed=discord.Embed(title="FurBot", url="https://github.com/BugadinhoGamers/FurBot", description="The glorified e621 browser!", color=0x80ecff)
     
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/747843765057880208/768545986074378291/IconTransparent.png")
+    
     embed.add_field(name="Latency", value=str(int(bot.latency * 1000)) + "ms", inline=True)
     embed.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) + "%", inline=True)
     embed.add_field(name="RAM Usage", value=str(psutil.virtual_memory().percent) + "%", inline=True)

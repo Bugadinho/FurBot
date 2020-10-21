@@ -8,17 +8,17 @@ from datetime import date
 from datetime import timezone
 from discord.ext import commands
 
-AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
-
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
+    
+    AnimalList = ["wolf", "dog", "cat", "goat", "eagle", "fox", "lion", "protogen", "cow", "horse"]
 
     @commands.command()
     async def whichanimal(self, ctx):
         random.seed(ctx.message.author.id * 2)
-        await ctx.message.channel.send("You are a " + AnimalList[random.randint(0,len(AnimalList) - 1)])
+        await ctx.message.channel.send("You are a " + self.AnimalList[random.randint(0,len(self.AnimalList) - 1)])
     
     @commands.command()
     async def pounce(self, ctx, *, pounced):
