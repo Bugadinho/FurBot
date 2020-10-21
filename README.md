@@ -4,6 +4,8 @@ A glorified e621/e926 browser with some fun stuff
 
 ## Installation [Linux]
 
+THIS GUIDE IS NOT UP TO DATE AND DOES NOT WORK!
+
 Create a folder for FurBot to reside in and navigate to it
 
 ```bash
