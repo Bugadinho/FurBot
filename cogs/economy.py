@@ -15,9 +15,9 @@ class Economy(commands.Cog):
         
     async def CheckAccount(self, id):
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
         mycursor = botdb.cursor()
@@ -39,9 +39,9 @@ class Economy(commands.Cog):
         await self.CheckAccount(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -60,9 +60,9 @@ class Economy(commands.Cog):
         await self.CheckAccount(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -81,9 +81,9 @@ class Economy(commands.Cog):
         curCredits = await self.GetCredits(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -105,9 +105,9 @@ class Economy(commands.Cog):
         curCredits = await self.GetCredits(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -222,8 +222,8 @@ class Economy(commands.Cog):
     
     @commands.command()
     async def MoneyAdd(self, ctx, id, amount):
-        if (ctx.message.author.id not in self.bot.MantainerList):
-            embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+        if (ctx.message.author.id not in self.bot.json["maintainers"]):
+            embed=discord.Embed(title="Error!", description="This is a maintainer only command", color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
         await self.GiveCredits(int(amount), id)
 

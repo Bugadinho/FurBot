@@ -16,9 +16,9 @@ class Moderation(commands.Cog):
     
     async def CheckServer(self, id):
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
         mycursor = botdb.cursor()
@@ -40,9 +40,9 @@ class Moderation(commands.Cog):
         await self.CheckServer(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -61,9 +61,9 @@ class Moderation(commands.Cog):
         await self.CheckServer(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -82,9 +82,9 @@ class Moderation(commands.Cog):
         await self.CheckServer(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -103,9 +103,9 @@ class Moderation(commands.Cog):
         await self.CheckServer(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -121,9 +121,9 @@ class Moderation(commands.Cog):
         await self.CheckServer(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 
@@ -139,9 +139,9 @@ class Moderation(commands.Cog):
         await self.CheckServer(id)
 
         botdb = mysql.connector.connect(
-            host="192.168.0.169",
-            user="root",
-            password=self.bot.dbpassword,
+            host=self.bot.json["dbip"],
+            user=self.bot.json["dbuser"],
+            password=self.bot.json["dbpassword"],
             database="FurBot"
         )
 

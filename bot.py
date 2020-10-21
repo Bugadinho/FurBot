@@ -25,6 +25,7 @@ import psutil
 import random
 import logging
 import py621
+import json
 
 import mysql.connector
 
@@ -32,39 +33,23 @@ logger = logging.getLogger()
 logger.setLevel(logging.CRITICAL)
 
 parser = argparse.ArgumentParser(description='A glorified e621 Discord browser!')
-parser.add_argument('--token', type=str,
-                   help='Specify token for out-of-loop execution')
+parser.add_argument('--bot', type=str,
+                   default="FurBot", help='Specify token for out-of-loop execution')
 args = parser.parse_args()
-
-if args.token is not None:
-    token = args.token
-else:
-    with open('../token.txt', 'r') as file:
-        token = file.read().replace('\n', '')\
-
-with open('../dbpassword.txt', 'r') as file:
-    dbpassword = file.read().replace('\n', '')
 
 bot = commands.Bot(command_prefix = 'f-')
 bot.remove_command('help')
 
-bot.dbpassword = ""
+bot.json = []
 
-with open('../dbpassword.txt', 'r') as file:
-    bot.dbpassword = file.read().replace('\n', '')
+with open('../' + args.bot + ".json") as json_file:
+    bot.json = json.load(json_file)
 
-bot.MantainerList = [306540670724734976, 413108421790007313]
 bot.CringeList = ["fortnite", "undertale"]
 
 bot.helpCommand = []
 
-blacklistedCogs = []
 loadedCogs = []
-
-with open('../blacklistedcogs.txt', 'r') as file:
-    toBeBlacklisted = file.readlines()
-    for line in toBeBlacklisted:
-        blacklistedCogs.append(line.strip())
 
 IsAlive = True
 
@@ -156,8 +141,8 @@ async def disconnect(ctx):
 
 @bot.command()
 async def update(ctx):
-    if (ctx.message.author.id not in bot.MantainerList):
-        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+    if (ctx.message.author.id not in bot.json["maintainers"]):
+        embed=discord.Embed(title="Error!", description="This is a maintainer only command", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
     
     await ctx.message.channel.send("Updating and restarting bot!")
@@ -172,8 +157,8 @@ async def update(ctx):
 
 @bot.command()
 async def restart(ctx):
-    if (ctx.message.author.id not in bot.MantainerList):
-        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+    if (ctx.message.author.id not in bot.json["maintainers"]):
+        embed=discord.Embed(title="Error!", description="This is a maintainer only command", color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
     
     await ctx.message.channel.send("Restarting bot!")
@@ -191,7 +176,7 @@ if __name__ == "__main__":
     for cog in potentialCogs:
         cogDiferential = cog.split(".")
         if len(cogDiferential) > 1:
-            if cogDiferential[0] in blacklistedCogs:
+            if cogDiferential[0] in bot.json["blacklistedCogs"]:
                 print("Blacklisted cog [" + cogDiferential[0] + "]!")
             elif cogDiferential[1] == "py":
                 try:
@@ -200,4 +185,4 @@ if __name__ == "__main__":
                 except Exception as e:
                     print("Cog [" + cogDiferential[0] + "] failed to load! " + str(e))
 
-    bot.run(token)
+    bot.run(bot.json["token"])
