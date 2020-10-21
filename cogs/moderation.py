@@ -196,21 +196,19 @@ class Moderation(commands.Cog):
         await Cc.send(str(member.name) + '#' + member.discriminator + ' saiu...')
 
     @commands.command()
-    async def hao(self, ctx):
-        await self.CheckServer(ctx.message.guild.id)
-        await ctx.send("haoburguer")
-
-    @commands.command()
+    @commands.has_permissions(administrator=True)
     async def setlog(self, ctx, channel: discord.TextChannel):
         await self.SetServerLogChannel(ctx.message.guild.id, channel.id)
         await ctx.send("Channel set!")
     
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def setjoin(self, ctx, channel: discord.TextChannel):
         await self.SetServerJoinChannel(ctx.message.guild.id, channel.id)
         await ctx.send("Channel set!")
     
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def setleave(self, ctx, channel: discord.TextChannel):
         await self.SetServerLeaveChannel(ctx.message.guild.id, channel.id)
         await ctx.send("Channel set!")
