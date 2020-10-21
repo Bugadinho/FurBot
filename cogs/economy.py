@@ -11,8 +11,6 @@ from discord.ext import commands
 with open('../dbpassword.txt', 'r') as file:
     dbpassword = file.read().replace('\n', '')
 
-CringeList = ["fortnite", "undertale"]
-
 class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -126,7 +124,7 @@ class Economy(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if any(word in message.content for word in CringeList):
+        if any(word in message.content for word in self.bot.CringeList):
             await self.TakeCredits(10, message.author.id, False)
 
         

@@ -49,6 +49,7 @@ bot = commands.Bot(command_prefix = 'f-')
 bot.remove_command('help')
 
 bot.MantainerList = [306540670724734976, 413108421790007313]
+bot.CringeList = ["fortnite", "undertale"]
 
 loadedCogs = []
 
@@ -198,30 +199,32 @@ async def disconnect(ctx):
 
 @bot.command()
 async def update(ctx):
+    if (ctx.message.author.id not in bot.MantainerList):
+        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
     await ctx.message.channel.send("Updating and restarting bot!")
 
     IsAlive = False
 
     await bot.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Updating..."))
 
-    if (ctx.message.author.id not in bot.MantainerList):
-        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
     await bot.close()
     os.system("git pull")
     os.execv(__file__, sys.argv)
 
 @bot.command()
 async def restart(ctx):
+    if (ctx.message.author.id not in bot.MantainerList):
+        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
+        return await ctx.message.channel.send(embed=embed)
+    
     await ctx.message.channel.send("Restarting bot!")
 
     IsAlive = False
 
     await bot.change_presence(status=discord.Status.dnd, activity=discord.Game(name="Restarting..."))
 
-    if (ctx.message.author.id not in bot.MantainerList):
-        embed=discord.Embed(title="Error!", description="This is a mantainer only command", color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
     await bot.close()
     os.execv(__file__, sys.argv)
 
