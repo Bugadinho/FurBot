@@ -8,9 +8,6 @@ import asyncio
 import py621
 from discord.ext import commands
 
-with open('../dbpassword.txt', 'r') as file:
-    dbpassword = file.read().replace('\n', '')
-
 class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -20,7 +17,7 @@ class Economy(commands.Cog):
         botdb = mysql.connector.connect(
             host="192.168.0.169",
             user="root",
-            password=dbpassword,
+            password=self.bot.dbpassword,
             database="FurBot"
         )
         mycursor = botdb.cursor()
@@ -44,7 +41,7 @@ class Economy(commands.Cog):
         botdb = mysql.connector.connect(
             host="192.168.0.169",
             user="root",
-            password=dbpassword,
+            password=self.bot.dbpassword,
             database="FurBot"
         )
 
@@ -65,7 +62,7 @@ class Economy(commands.Cog):
         botdb = mysql.connector.connect(
             host="192.168.0.169",
             user="root",
-            password=dbpassword,
+            password=self.bot.dbpassword,
             database="FurBot"
         )
 
@@ -86,7 +83,7 @@ class Economy(commands.Cog):
         botdb = mysql.connector.connect(
             host="192.168.0.169",
             user="root",
-            password=dbpassword,
+            password=self.bot.dbpassword,
             database="FurBot"
         )
 
@@ -110,7 +107,7 @@ class Economy(commands.Cog):
         botdb = mysql.connector.connect(
             host="192.168.0.169",
             user="root",
-            password=dbpassword,
+            password=self.bot.dbpassword,
             database="FurBot"
         )
 

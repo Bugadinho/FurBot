@@ -48,6 +48,11 @@ with open('../dbpassword.txt', 'r') as file:
 bot = commands.Bot(command_prefix = 'f-')
 bot.remove_command('help')
 
+bot.dbpassword = ""
+
+with open('../dbpassword.txt', 'r') as file:
+    bot.dbpassword = file.read().replace('\n', '')
+
 bot.MantainerList = [306540670724734976, 413108421790007313]
 bot.CringeList = ["fortnite", "undertale"]
 
@@ -73,43 +78,6 @@ async def on_ready():
                 await guild.voice_client.disconnect()
         except:
             pass
-
-@bot.event
-async def on_message_delete(message):
-    # TODO: MAKE THIS FEATURE SERVER AGNOSTIC
-
-    if (message.channel.type is discord.ChannelType.private):
-        return
-    if (message.guild.id != 540651642463453253):
-        return
-    
-    Cl = bot.get_channel(746838742295248958)
-    
-    embed=discord.Embed(title=str(message.author.name) + "#" + str(message.author.discriminator) + " [" + str(message.author.id) + "]", description=str(message.id), color=0xff0000)
-    embed.add_field(name="Files", value=str(len(message.attachments)), inline=False)
-    embed.add_field(name="Time", value=datetime.now().strftime("%d/%m/%Y %H:%M:%S"), inline=False)
-    embed.set_footer(text=message.content)
-    await Cl.send(embed=embed)
-
-@bot.event
-async def on_member_join(member):
-    # TODO: MAKE THIS FEATURE SERVER AGNOSTIC
-
-    if (member.guild.id != 540651642463453253):
-        return
-    
-    Cc = bot.get_channel(745811042893955082)
-    await Cc.send('UwU OwO, um novo aluno chegou, <@' + str(member.id) + '>!')
-
-@bot.event
-async def on_member_remove(member):
-    # TODO: MAKE THIS FEATURE SERVER AGNOSTIC
-
-    if (member.guild.id != 540651642463453253):
-        return
-    
-    Cc = bot.get_channel(745811042893955082)
-    await Cc.send(str(member.name) + '#' + member.discriminator + ' saiu...')
 
 @bot.event
 async def on_command_error(ctx, error):
