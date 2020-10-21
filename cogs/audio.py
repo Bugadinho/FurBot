@@ -64,3 +64,9 @@ class Audio(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Audio(bot))
+
+    bot.helpCommand.append(["\n:microphone:", "**Voice Fun**", False])
+    bot.helpCommand.append(["<:gooz:747231402285727776> f-moan", "Moans on your voice channel\nUsage: f-moan", True])
+    bot.helpCommand.append(["<:hot:747160250158940180> f-owo", "OwOs on your voice channel\nUsage: f-owo", True])
+    bot.helpCommand.append(["<:legocity:747163763085672518> f-rap", "Raps on your voice channel\nUsage: f-rap", True])
+    bot.helpCommand.append([":stop_button: f-disconnect", "Disconnects from voice channel\nUsage: f-disconnect", True])

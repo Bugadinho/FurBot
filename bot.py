@@ -56,7 +56,15 @@ with open('../dbpassword.txt', 'r') as file:
 bot.MantainerList = [306540670724734976, 413108421790007313]
 bot.CringeList = ["fortnite", "undertale"]
 
+bot.helpCommand = []
+
+blacklistedCogs = []
 loadedCogs = []
+
+with open('../blacklistedcogs.txt', 'r') as file:
+    toBeBlacklisted = file.readlines()
+    for line in toBeBlacklisted:
+        blacklistedCogs.append(line.strip())
 
 IsAlive = True
 
@@ -98,30 +106,9 @@ async def on_command_error(ctx, error):
 async def help(ctx):
     embed=discord.Embed(title=":book: Help", description="These are the commands and how to use them, please keep in mind that the list is very big!", color=0xe5ff24)
     
-    embed.add_field(name="\n<:die:747162817714454570>", value="**e621/e926**", inline=False)
+    for Command in bot.helpCommand:
+        embed.add_field(name=Command[0], value=Command[1], inline=Command[2])
     
-    embed.add_field(name=":globe_with_meridians: f-request", value="Looks up content on e621 or e926\nUsage: f-request nsfw dick | f-request sfw random", inline=True)
-    embed.add_field(name="<:impressive:744230514994708590> f-meme", value="Looks up a meme on e926\nUsage: f-meme", inline=True)
-    
-    embed.add_field(name="\n:microphone:", value="**Voice Fun**", inline=False)
-
-    embed.add_field(name="<:gooz:747231402285727776> f-moan", value="Moans on your voice channel\nUsage: f-moan", inline=True)
-    embed.add_field(name="<:hot:747160250158940180> f-owo", value="OwOs on your voice channel\nUsage: f-owo", inline=True)
-    embed.add_field(name="<:legocity:747163763085672518> f-rap", value="Raps on your voice channel\nUsage: f-rap", inline=True)
-    embed.add_field(name=":stop_button: f-disconnect", value="Disconnects from voice channel\nUsage: f-disconnect", inline=True)
-
-    embed.add_field(name="\n:bookmark_tabs:", value="**Text Fun**", inline=False)
-
-    embed.add_field(name=":speech_left: f-chat", value="Chats with a very dumb AI\nUsage: f-chat hello, how are you doing?", inline=True)
-    embed.add_field(name=":satellite_orbital: f-obliterate", value="Obliterate your target's DM\nUsage: f-obliterate @Bugadinho#5769", inline=True)
-    embed.add_field(name=":airplane: f-airstrike", value="Airstrikes your target's DM\nUsage: f-airstrike @Bugadinho#5769", inline=True)
-    embed.add_field(name="<:fapgamer:747188878951186433> f-cumlord", value="Tells you who is the daily cumlord\nUsage: f-cumlord", inline=True)
-    embed.add_field(name=":gun: f-roulette", value="A innocent russian roulette game\nUsage: f-roulette", inline=True)
-    embed.add_field(name=":thinking: f-howmuch", value="Tells how much of a something you are\nUsage: f-howmuch alive", inline=True)
-    embed.add_field(name=":dog: f-whichanimal", value="Tells you which animal you are\nUsage: f-whichanimal", inline=True)
-    embed.add_field(name="<:subway:744236763735785483> f-yiff", value="Yiffs your target\nUsage: f-yiff @Bugadinho#5769", inline=True)
-    embed.add_field(name=":fox: f-pounce", value="Pounces your target\nUsage: f-pounce @Bugadinho#5769", inline=True)
-
     await ctx.message.channel.send(embed=embed)
 
 @bot.command()
@@ -204,7 +191,9 @@ if __name__ == "__main__":
     for cog in potentialCogs:
         cogDiferential = cog.split(".")
         if len(cogDiferential) > 1:
-            if cogDiferential[1] == "py":
+            if cogDiferential[0] in blacklistedCogs:
+                print("Blacklisted cog [" + cogDiferential[0] + "]!")
+            elif cogDiferential[1] == "py":
                 try:
                     bot.load_extension("cogs." + cogDiferential[0])
                     print("Loaded cog [" + cogDiferential[0] + "]!")

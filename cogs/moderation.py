@@ -215,3 +215,8 @@ class Moderation(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
+
+    bot.helpCommand.append(["\n:oncoming_police_car:", "**Moderation**", False])
+    bot.helpCommand.append(["f-setlog", "Sets a log channel\nUsage: f-setlog #logs", True])
+    bot.helpCommand.append(["f-setjoin", "Sets a join channel\nUsage: f-setjoin #welcome", True])
+    bot.helpCommand.append(["f-setleave", "Sets a leave channel\nUsage: f-setleave #goodbye", True])

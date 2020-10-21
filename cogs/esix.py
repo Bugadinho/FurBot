@@ -85,3 +85,7 @@ class ESix(commands.Cog):
 
 def setup(bot):
     bot.add_cog(ESix(bot))
+    
+    bot.helpCommand.append(["\n<:die:747162817714454570>", "**e621/e926**", False])
+    bot.helpCommand.append([":globe_with_meridians: f-request", "Looks up content on e621 or e926\nUsage: f-request nsfw dick | f-request sfw random", True])
+    bot.helpCommand.append(["<:impressive:744230514994708590> f-meme", "Looks up a meme on e926\nUsage: f-meme", True])

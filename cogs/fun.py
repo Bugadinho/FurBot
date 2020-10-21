@@ -69,3 +69,10 @@ class Fun(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Fun(bot))
+
+    bot.helpCommand.append(["\n:bookmark_tabs:", "**Text Fun**", False])
+    bot.helpCommand.append(["<:fapgamer:747188878951186433> f-cumlord", "Tells you who is the daily cumlord\nUsage: f-cumlord", True])
+    bot.helpCommand.append([":thinking: f-howmuch", "Tells how much of a something you are\nUsage: f-howmuch alive", True])
+    bot.helpCommand.append([":dog: f-whichanimal", "Tells you which animal you are\nUsage: f-whichanimal", True])
+    bot.helpCommand.append(["<:subway:744236763735785483> f-yiff", "Yiffs your target\nUsage: f-yiff @Bugadinho#5769", True])
+    bot.helpCommand.append([":fox: f-pounce", "Pounces your target\nUsage: f-pounce @Bugadinho#5769", True])
