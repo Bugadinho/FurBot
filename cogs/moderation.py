@@ -195,7 +195,7 @@ class Moderation(commands.Cog):
         elif (channel == ""):
             return
     
-        Cc = bot.get_channel(int(channel))
+        Cc = self.bot.get_channel(int(channel))
         await Cc.send(self.bot.GetLocale(member.guild, "mod_join") + '<@' + str(member.id) + '>!')
     
     @commands.Cog.listener()
@@ -209,7 +209,7 @@ class Moderation(commands.Cog):
         elif (channel == ""):
             return
     
-        Cc = bot.get_channel(int(channel))
+        Cc = self.bot.get_channel(int(channel))
         await Cc.send(str(member.name) + '#' + member.discriminator + self.bot.GetLocale(member.guild, "mod_leave"))
 
     @commands.command()
