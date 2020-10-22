@@ -25,6 +25,16 @@
         "voice_frap" : "Raps on your voice channel\nUsage: f-rap",
         "voice_fdisconnect" : "Disconnects from voice channel\nUsage: f-disconnect",
         
+        "eco_cringe" : ", bruh you just posted cringe, you are gonna lose credits!",
+        "eco_suck" : ", go suck a cock, i fucking hate you!",
+        "eco_roulette" : "Russian Roulette",
+        "eco_roulettew" : "You won!",
+        "eco_roulettel" : "You lost!",
+        "eco_error" : "Not enough credits!",
+        "eco_orbitalfail" : "Orbital strike has failed!",
+        "eco_obliterated" : "You have been obliterated by ",
+        "eco_obliterate" : " has obliterated ",
+
         "esix_esix" : "**e621/e926**",
         "esix_frequest" : "Looks up content on e621 or e926\nUsage: f-request nsfw dick | f-request sfw random",
         "esix_fmeme" : "Looks up a meme on e926\nUsage: f-meme",
@@ -80,6 +90,16 @@
         "voice_frap" : "Canta um rap no seu canal de voz\nUso: f-rap",
         "voice_fdisconnect" : "Desconecta de seu canal de voz\nUso: f-disconnect",
         
+        "eco_cringe" : ", mano tu acabo de posta cringe, tu vai perder credits!",
+        "eco_suck" : ", va chupa uma rola, te odeio!",
+        "eco_roulette" : "Roleta Russa",
+        "eco_roulettew" : "Voce ganhou!",
+        "eco_roulettel" : "Voce perdeu!",
+        "eco_error" : "Creditos insuficientes!",
+        "eco_orbitalfail" : "Ataque orbital falhado!",
+        "eco_obliterated" : "Voce foi obliterado por ",
+        "eco_obliterate" : " obliterou ",
+
         "esix_esix" : "**e621/e926**",
         "esix_frequest" : "Pesquisa posts no e621 ou e926\nUo: f-request nsfw dick | f-request sfw random",
         "esix_fmeme" : "Procura por um meme no e926\nUso: f-meme",

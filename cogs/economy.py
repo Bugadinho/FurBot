@@ -126,7 +126,7 @@ class Economy(commands.Cog):
 
         
             await message.delete()
-            return await message.channel.send(message.author.mention + ", bruh you just posted cringe, you are gonna lose credits!")
+            return await message.channel.send(message.author.mention + self.bot.GetLocale(message.guild, "eco_cringe"))
 
         like = await self.GetLike(message.author.id)
     
@@ -134,7 +134,7 @@ class Economy(commands.Cog):
 
         if (anger == 1):
             await message.delete()
-            return await message.channel.send(message.author.mention + ", go suck a cock, i fucking hate you!")
+            return await message.channel.send(message.author.mention + self.bot.GetLocale(message.guild, "eco_suck"))
     
     
     @commands.command()
@@ -148,17 +148,17 @@ class Economy(commands.Cog):
     @commands.command()
     async def roulette(self, ctx):
         if (ctx.message.channel.type is discord.ChannelType.private):
-            embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "error3"), color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
 
         bullet = random.randint(1,6)
         if (bullet == 6):
-            embed=discord.Embed(title="Russian Roulette", description="You lost!", color=0xff0000)
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "eco_roulette"), description=self.bot.GetLocale(ctx.message.guild, "eco_roulettel"), color=0xff0000)
             await self.TakeCredits(60, ctx.message.author.id, False)
 
             return await ctx.message.channel.send(embed=embed)
         else:
-            embed=discord.Embed(title="Russian Roulette", description="You won!", color=0x00ff88)
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "eco_roulette"), description=self.bot.GetLocale(ctx.message.guild, "eco_roulettew"), color=0x00ff88)
             await self.GiveCredits(10, ctx.message.author.id)
 
             return await ctx.message.channel.send(embed=embed)
@@ -166,13 +166,13 @@ class Economy(commands.Cog):
     @commands.command()
     async def obliterate(self, ctx, obliterated: discord.User):
         if (ctx.message.channel.type is discord.ChannelType.private):
-            embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "error3"), color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
         
         curCredits = await self.GetCredits(ctx.message.author.id)
 
         if (curCredits < 200):
-            embed=discord.Embed(title="Error!", description="Not enough credits!", color=0xff0000)
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "eco_error"), color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
     
         esix = self.bot.get_cog("ESix")
@@ -186,7 +186,7 @@ class Economy(commands.Cog):
         Posts = await asyncRequest
 
         if(len(Posts) == 0):
-            return await ctx.message.channel.send("Orbital strike has failed!")
+            return await ctx.message.channel.send(self.bot.GetLocale(ctx.message.guild, "eco_orbitalfail"))
     
         Post = Posts[0]
         PostURL = Post["file"]["url"]
@@ -196,9 +196,9 @@ class Economy(commands.Cog):
                 await obliterated.create_dm()
     
             if(obliterated.dm_channel == None):
-                return await ctx.message.channel.send("Orbital strike has failed!")
+                return await ctx.message.channel.send(self.bot.GetLocale(ctx.message.guild, "eco_orbitalfail"))
         except:
-            return await ctx.message.channel.send("Orbital strike has failed!")
+            return await ctx.message.channel.send(self.bot.GetLocale(ctx.message.guild, "eco_orbitalfail"))
     
         embed=discord.Embed(color=0x8000ff)
         embed.set_image(url="https://media1.giphy.com/media/3K0D1Dkqh9MOmLSjzW/giphy.gif")
@@ -206,11 +206,11 @@ class Economy(commands.Cog):
         oldnickname = obliterated.display_name
 
         try:
-            await obliterated.dm_channel.send("You have been obliterated by " + ctx.message.author.name + "!")
+            await obliterated.dm_channel.send(self.bot.GetLocale(ctx.message.guild, "eco_obliterated") + ctx.message.author.name + "!")
             message1 = await obliterated.dm_channel.send(PostURL)
             message2 = await obliterated.dm_channel.send(PostURL)
             message3 = await obliterated.dm_channel.send(PostURL)
-            await ctx.message.channel.send(content=ctx.message.author.mention + " has obliterated " + obliterated.mention + "!",embed=embed)
+            await ctx.message.channel.send(content=ctx.message.author.mention + self.bot.GetLocale(ctx.message.guild, "eco_obliterate") + obliterated.mention + "!",embed=embed)
             await asyncio.sleep(1) 
             await message1.delete()
             await message2.delete()
@@ -218,12 +218,12 @@ class Economy(commands.Cog):
             await self.TakeCredits(200, ctx.message.author.id, True)
         except:
             print("uh")
-            return await ctx.message.channel.send("Orbital strike has failed!")
+            return await ctx.message.channel.send(self.bot.GetLocale(ctx.message.guild, "eco_orbitalfail"))
     
     @commands.command()
     async def MoneyAdd(self, ctx, id, amount):
         if (ctx.message.author.id not in self.bot.json["maintainers"]):
-            embed=discord.Embed(title="Error!", description="This is a maintainer only command", color=0xff0000)
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "error4"), color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
         await self.GiveCredits(int(amount), id)
 
