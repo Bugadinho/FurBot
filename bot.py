@@ -4,29 +4,20 @@
 # Licensed under GPLv3.0
 
 import argparse
-import io
-import aiohttp
 import os
 import sys
 import platform
 import discord
 import asyncio
-import subprocess
 from discord.ext import commands, tasks
 from discord.utils import get
 from discord import Game
 import discord_argparse.errors as da_errors
 import json
-import requests
 from datetime import datetime
-from datetime import date
-from datetime import timezone
 import psutil
 import random
 import logging
-import py621
-import json
-import mysql.connector
 
 intents = discord.Intents.default()
 intents.members = True
