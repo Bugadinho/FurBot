@@ -217,6 +217,17 @@ class Moderation(commands.Cog):
     async def setleave(self, ctx, channel: discord.TextChannel):
         await self.SetServerLeaveChannel(ctx.message.guild.id, channel.id)
         await ctx.send("Channel set!")
+    
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def ban(self, ctx, banned: discord.User, *, reason):
+        await ctx.guild.ban(banned, reason)
+    
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def kick(self, ctx, kicked: discord.User, *, reason):
+        await ctx.guild.kick(kicked, reason)
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
@@ -225,3 +236,5 @@ def setup(bot):
     bot.helpCommand.append(["f-setlog", "mod_fsetlog", True])
     bot.helpCommand.append(["f-setjoin", "mod_fsetjoin", True])
     bot.helpCommand.append(["f-setleave", "mod_fsetleave", True])
+    bot.helpCommand.append(["f-ban", "mod_fban", True])
+    bot.helpCommand.append(["f-kick", "mod_fkick", True])

@@ -36,6 +36,9 @@
         "eco_orbitalfail" : "Orbital strike has failed!",
         "eco_obliterated" : "You have been obliterated by ",
         "eco_obliterate" : " has obliterated ",
+        "eco_transaction" : "Transaction",
+        "eco_give" : " credits were given to ",
+        "eco_error2" : "You can't give a negative amount of credits",
 
         "esix_esix" : "**e621/e926**",
         "esix_frequest" : "Looks up content on e621 or e926\nUsage: f-request nsfw dick | f-request sfw random",
@@ -49,6 +52,8 @@
         "mod_fsetleave" : "Sets a leave channel\nUsage: f-setleave #goodbye",
         "mod_join" : "UwU OwO, someone just joined, ",
         "mod_leave" : " left...",
+        "mod_fban" : "Bans a user\nUsage: f-ban @Bugadinho#5769 he was a bad boi",
+        "mod_fkick" : "Kicks a user\nUsage: f-kick @Bugadinho#5769 he was a bad boi",
         
         "fun_fun" : "**Text Fun**",
         "fun_fcumlord" : "Tells you who is the daily cumlord\nUsage: f-cumlord",
@@ -103,6 +108,9 @@
         "eco_orbitalfail" : "Ataque orbital falhado!",
         "eco_obliterated" : "Voce foi obliterado por ",
         "eco_obliterate" : " obliterou ",
+        "eco_transaction" : "Transacao",
+        "eco_give" : " credits foram dados a ",
+        "eco_error2" : "Voce nao pode dar uma quantidade negativa de credits!",
 
         "esix_esix" : "**e621/e926**",
         "esix_frequest" : "Pesquisa posts no e621 ou e926\nUo: f-request nsfw dick | f-request sfw random",
@@ -116,6 +124,8 @@
         "mod_fsetleave" : "Define um canal de saida\nUso: f-setleave #goodbye",
         "mod_join" : "UwU OwO, alguem acabou de chegar, ",
         "mod_leave" : " saiu...",
+        "mod_fban" : "Bane um usuario\nUsage: f-ban @Bugadinho#5769 foi um menino muito mal",
+        "mod_fkick" : "Kicka um usuario\nUsage: f-kick @Bugadinho#5769 foi um menino muito mal",
         
         "fun_fun" : "**Diversao com Texto**",
         "fun_fcumlord" : "Diz quem eh o mestre do gozo diario\nUso: f-cumlord",

@@ -226,6 +226,20 @@ class Economy(commands.Cog):
             embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "error4"), color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
         await self.GiveCredits(int(amount), id)
+    
+    @commands.command()
+    async def give(self, ctx, amount, receiver : discord.User):
+        if int(amount) < 0:
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "eco_error2"), color=0xff0000)
+            return await ctx.message.channel.send(embed=embed)
+        
+        if await self.TakeCredits(int(amount), ctx.message.author.id, True) == False:
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "eco_error"), color=0xff0000)
+            return await ctx.message.channel.send(embed=embed)
+        
+        await self.GiveCredits(int(amount), receiver.id)
+        embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "eco_transaction"), description=str(amount) + self.bot.GetLocale(ctx.message.guild, "eco_give") + receiver.name, color=0xffc800)
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Economy(bot))

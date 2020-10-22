@@ -39,7 +39,7 @@ parser.add_argument('--bot', type=str,
                    default="FurBot", help='Specify bot json file')
 args = parser.parse_args()
 
-bot = commands.Bot(command_prefix = 'f-', intents=intents)
+bot = commands.AutoShardedBot(command_prefix = 'f-', intents=intents)
 bot.remove_command('help')
 
 bot.json = []
