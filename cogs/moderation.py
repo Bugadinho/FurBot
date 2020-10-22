@@ -171,10 +171,6 @@ class Moderation(commands.Cog):
 
         if (logChannel == None):
             return
-        elif (logChannel == 0):
-            return
-        elif (logChannel == ""):
-            return
     
         Cl = self.bot.get_channel(int(logChannel))
     
@@ -190,10 +186,6 @@ class Moderation(commands.Cog):
 
         if (channel == None):
             return
-        elif (channel == 0):
-            return
-        elif (channel == ""):
-            return
     
         Cc = self.bot.get_channel(int(channel))
         await Cc.send(self.bot.GetLocale(member.guild, "mod_join") + '<@' + str(member.id) + '>!')
@@ -203,10 +195,6 @@ class Moderation(commands.Cog):
         channel = await self.GetLeaveChannel(member.guild.id)
 
         if (channel == None):
-            return
-        elif (channel == 0):
-            return
-        elif (channel == ""):
             return
     
         Cc = self.bot.get_channel(int(channel))
