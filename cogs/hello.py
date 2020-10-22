@@ -11,7 +11,7 @@ class Hello(commands.Cog):
 
     @commands.command()
     async def hello(self, ctx):
-        await ctx.send("Hello, world!")
+        await ctx.send(self.bot.GetLocale(ctx.message.guild, "hello"))
 
 def setup(bot):
     bot.add_cog(Hello(bot))

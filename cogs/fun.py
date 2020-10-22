@@ -18,13 +18,13 @@ class Fun(commands.Cog):
     @commands.command()
     async def whichanimal(self, ctx):
         random.seed(ctx.message.author.id * 2)
-        await ctx.message.channel.send("You are a " + self.AnimalList[random.randint(0,len(self.AnimalList) - 1)])
+        await ctx.message.channel.send(self.bot.GetLocale(ctx.message.guild, "fun_youare") + self.AnimalList[random.randint(0,len(self.AnimalList) - 1)])
     
     @commands.command()
     async def pounce(self, ctx, *, pounced):
         embed=discord.Embed(color=0x8000ff)
         embed.set_image(url="https://static1.e926.net/data/06/65/066570f0b541f23c8d03d1956a590167.gif")
-        await ctx.message.channel.send(content=ctx.message.author.mention + " pounced on " + pounced,embed=embed)
+        await ctx.message.channel.send(content=ctx.message.author.mention + self.bot.GetLocale(ctx.message.guild, "fun_pounced") + pounced,embed=embed)
     
     @commands.command()
     async def yiff(self, ctx, *, yiffed):
@@ -32,25 +32,25 @@ class Fun(commands.Cog):
 
         embed=discord.Embed(color=0x8000ff)
         embed.set_image(url=gif)
-        await ctx.message.channel.send(content=ctx.message.author.mention + " yiffed " + yiffed,embed=embed)
+        await ctx.message.channel.send(content=ctx.message.author.mention + self.bot.GetLocale(ctx.message.guild, "fun_yiffed") + yiffed,embed=embed)
 
     @commands.command()
     async def measuredick(self, ctx):
         random.seed(ctx.message.author.id * 2)
 
-        embed=discord.Embed(title="Cock Measurer 3000", description="Your cock is about " + str(random.randint(0,200) / 10) + "cm", color=0x8000ff)
+        embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "fun_cocktitle"), description=self.bot.GetLocale(ctx.message.guild, "fun_cockabout") + str(random.randint(0,200) / 10) + "cm", color=0x8000ff)
         await ctx.message.channel.send(embed=embed)
     
     @commands.command()
     async def cumlord(self, ctx):
         if (ctx.message.channel.type is discord.ChannelType.private):
-            embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "error3"), color=0xff0000)
             return await ctx.message.channel.send(embed=embed)
     
         random.seed(datetime.combine(date.today(), datetime.min.time()).replace(tzinfo=timezone.utc).timestamp())
         serverUsers = ctx.message.guild.members
 
-        embed=discord.Embed(title="Daily cumlord", description="The daily cumlord is " + serverUsers[random.randint(0,len(serverUsers)-1)].mention, color=0x8000ff)
+        embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "fun_cumtitle"), description=self.bot.GetLocale(ctx.message.guild, "fun_cumis") + serverUsers[random.randint(0,len(serverUsers)-1)].mention, color=0x8000ff)
         await ctx.message.channel.send(embed=embed)
     
     @commands.command()
@@ -60,7 +60,7 @@ class Fun(commands.Cog):
         random.seed(ctx.message.author.id * int(bobao, 36) * 2)
         bobin = random.randint(0,100)
 
-        embed=discord.Embed(title="How much?", description=ctx.message.author.mention + " is " + str(bobin) + "% " + bobao, color=0x8000ff)
+        embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "fun_howmuch"), description=ctx.message.author.mention + self.bot.GetLocale(ctx.message.guild, "fun_howis") + str(bobin) + "% " + bobao, color=0x8000ff)
         await ctx.message.channel.send(embed=embed)
 
         if (bobin == 100):
@@ -70,9 +70,9 @@ class Fun(commands.Cog):
 def setup(bot):
     bot.add_cog(Fun(bot))
 
-    bot.helpCommand.append(["\n:bookmark_tabs:", "**Text Fun**", False])
-    bot.helpCommand.append(["<:fapgamer:747188878951186433> f-cumlord", "Tells you who is the daily cumlord\nUsage: f-cumlord", True])
-    bot.helpCommand.append([":thinking: f-howmuch", "Tells how much of a something you are\nUsage: f-howmuch alive", True])
-    bot.helpCommand.append([":dog: f-whichanimal", "Tells you which animal you are\nUsage: f-whichanimal", True])
-    bot.helpCommand.append(["<:subway:744236763735785483> f-yiff", "Yiffs your target\nUsage: f-yiff @Bugadinho#5769", True])
-    bot.helpCommand.append([":fox: f-pounce", "Pounces your target\nUsage: f-pounce @Bugadinho#5769", True])
+    bot.helpCommand.append(["\n:bookmark_tabs:", "fun_fun", False])
+    bot.helpCommand.append(["<:fapgamer:747188878951186433> f-cumlord", "fun_fcumlord", True])
+    bot.helpCommand.append([":thinking: f-howmuch", "fun_fhowmuch", True])
+    bot.helpCommand.append([":dog: f-whichanimal", "fun_fwhichanimal", True])
+    bot.helpCommand.append(["<:subway:744236763735785483> f-yiff", "fun_fyiff", True])
+    bot.helpCommand.append([":fox: f-pounce", "fun_fpounce", True])

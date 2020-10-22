@@ -20,20 +20,20 @@ class Economy(commands.Cog):
             password=self.bot.json["dbpassword"],
             database="FurBot"
         )
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
 
         sql = "SELECT * FROM Members WHERE ID = %s"
         val = (id, )
 
-        mycursor.execute(sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
 
-        myresult = mycursor.fetchall()
+        myresult = await asyncio.get_event_loop().run_in_executor(None, mycursor.fetchall)
 
         if myresult == []:
             sql = "INSERT INTO Members (ID, Credits, HornyJail, Likeness) VALUES (%s, %s, %s, %s)"
             val = (id, 0, 0, 50)
-            mycursor.execute(sql, val)
-            botdb.commit()
+            await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
+            await asyncio.get_event_loop().run_in_executor(None, botdb.commit)
     
     async def GetLike(self, id):
         await self.CheckAccount(id)
@@ -45,14 +45,14 @@ class Economy(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
 
         sql = "SELECT * FROM Members WHERE ID = %s"
         val = (id, )
 
-        mycursor.execute(sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
 
-        myresult = mycursor.fetchall()
+        myresult = await asyncio.get_event_loop().run_in_executor(None, mycursor.fetchall)
         
         return int(myresult[0][3])
     
@@ -66,14 +66,14 @@ class Economy(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
 
         sql = "SELECT * FROM Members WHERE ID = %s"
         val = (id, )
 
-        mycursor.execute(sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
 
-        myresult = mycursor.fetchall()
+        myresult = await asyncio.get_event_loop().run_in_executor(None, mycursor.fetchall)
         
         return int(myresult[0][1])
 
@@ -87,7 +87,7 @@ class Economy(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
         
         if requireAll == True:
             if curCredits < amount:
@@ -96,8 +96,8 @@ class Economy(commands.Cog):
         sql = "UPDATE Members SET Credits = %s WHERE ID = %s"
         val = (max(curCredits - amount, 0), id, )
 
-        mycursor.execute(sql, val)
-        botdb.commit()
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, botdb.commit)
 
         return True
     
@@ -111,13 +111,13 @@ class Economy(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
         
         sql = "UPDATE Members SET Credits = %s WHERE ID = %s"
         val = (max(curCredits + amount, 0), id, )
 
-        mycursor.execute(sql, val)
-        botdb.commit()
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, botdb.commit)
 
     @commands.Cog.listener()
     async def on_message(self, message):

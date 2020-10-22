@@ -24,5 +24,5 @@ class AI(commands.Cog):
 def setup(bot):
     bot.add_cog(AI(bot))
 
-    bot.helpCommand.append(["\n:computer:", "**AI**", False])
-    bot.helpCommand.append([":speech_left: f-chat", "Chats with a very dumb AI\nUsage: f-chat hello, how are you doing?", True])
+    bot.helpCommand.append(["\n:computer:", "ai_ai", False])
+    bot.helpCommand.append([":speech_left: f-chat", "ai_fchat", True])

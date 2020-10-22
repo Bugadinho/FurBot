@@ -38,7 +38,7 @@ class ESix(commands.Cog):
                     Safe = False
                     Tags.append("rating:explicit")
                 else:
-                    embed=discord.Embed(title="Error!", description="NSFW is disabled on this channel!", color=0xff0000)
+                    embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "esix_nsfw"), color=0xff0000)
                     return await ctx.message.channel.send(embed=embed)
             else:
                 link = "https://e926.net/"
@@ -58,7 +58,7 @@ class ESix(commands.Cog):
             Posts = await asyncRequest
 
             if(len(Posts) == 0):
-                embed=discord.Embed(title="Error!", description="No post was found!", color=0xff0000)
+                embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "esix_nopost"), color=0xff0000)
                 return await ctx.message.channel.send(embed=embed)
 
             Post = Posts[0]
@@ -86,6 +86,6 @@ class ESix(commands.Cog):
 def setup(bot):
     bot.add_cog(ESix(bot))
     
-    bot.helpCommand.append(["\n<:die:747162817714454570>", "**e621/e926**", False])
-    bot.helpCommand.append([":globe_with_meridians: f-request", "Looks up content on e621 or e926\nUsage: f-request nsfw dick | f-request sfw random", True])
-    bot.helpCommand.append(["<:impressive:744230514994708590> f-meme", "Looks up a meme on e926\nUsage: f-meme", True])
+    bot.helpCommand.append(["\n<:die:747162817714454570>", "esix_esix", False])
+    bot.helpCommand.append([":globe_with_meridians: f-request", "esix_frequest", True])
+    bot.helpCommand.append(["<:impressive:744230514994708590> f-meme", "esix_fmeme", True])

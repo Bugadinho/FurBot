@@ -21,20 +21,20 @@ class Moderation(commands.Cog):
             password=self.bot.json["dbpassword"],
             database="FurBot"
         )
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
 
         sql = "SELECT * FROM Servers WHERE ID = %s"
         val = (id, )
 
-        mycursor.execute(sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
 
-        myresult = mycursor.fetchall()
+        myresult = await asyncio.get_event_loop().run_in_executor(None, mycursor.fetchall)
 
         if myresult == []:
             sql = "INSERT INTO Servers (ID, LastCumLord, CumLord, JoinChannel, LeaveChannel, LogChannel, Language) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             val = (id, None, None, None, None, None, None)
-            mycursor.execute(sql, val)
-            botdb.commit()
+            await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
+            await asyncio.get_event_loop().run_in_executor(None, botdb.commit)
         
     async def GetJoinChannel(self, id):
         await self.CheckServer(id)
@@ -46,14 +46,17 @@ class Moderation(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
 
         sql = "SELECT * FROM Servers WHERE ID = %s"
         val = (id, )
 
-        mycursor.execute(sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
 
-        myresult = mycursor.fetchall()
+        myresult = await asyncio.get_event_loop().run_in_executor(None, mycursor.fetchall)
+
+        if myresult[0][3] == None:
+            return None
         
         return int(myresult[0][3])
     
@@ -67,14 +70,17 @@ class Moderation(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
 
         sql = "SELECT * FROM Servers WHERE ID = %s"
         val = (id, )
 
-        mycursor.execute(sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
 
-        myresult = mycursor.fetchall()
+        myresult = await asyncio.get_event_loop().run_in_executor(None, mycursor.fetchall)
+
+        if myresult[0][4] == None:
+            return None
         
         return int(myresult[0][4])
     
@@ -88,14 +94,17 @@ class Moderation(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
 
         sql = "SELECT * FROM Servers WHERE ID = %s"
         val = (id, )
 
-        mycursor.execute(sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
 
-        myresult = mycursor.fetchall()
+        myresult = await asyncio.get_event_loop().run_in_executor(None, mycursor.fetchall)
+        
+        if myresult[0][5] == None:
+            return None
         
         return int(myresult[0][5])
     
@@ -109,13 +118,13 @@ class Moderation(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
         
         sql = "UPDATE Servers SET JoinChannel = %s WHERE ID = %s"
         val = (value, id, )
 
-        mycursor.execute(sql, val)
-        botdb.commit()
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, botdb.commit)
     
     async def SetServerLeaveChannel(self, id, value):
         await self.CheckServer(id)
@@ -127,13 +136,13 @@ class Moderation(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
         
         sql = "UPDATE Servers SET LeaveChannel = %s WHERE ID = %s"
         val = (value, id, )
 
-        mycursor.execute(sql, val)
-        botdb.commit()
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, botdb.commit)
 
     async def SetServerLogChannel(self, id, value):
         await self.CheckServer(id)
@@ -145,13 +154,13 @@ class Moderation(commands.Cog):
             database="FurBot"
         )
 
-        mycursor = botdb.cursor()
+        mycursor = await asyncio.get_event_loop().run_in_executor(None, botdb.cursor)
         
         sql = "UPDATE Servers SET LogChannel = %s WHERE ID = %s"
         val = (value, id, )
 
-        mycursor.execute(sql, val)
-        botdb.commit()
+        await asyncio.get_event_loop().run_in_executor(None, mycursor.execute, sql, val)
+        await asyncio.get_event_loop().run_in_executor(None, botdb.commit)
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
@@ -161,6 +170,10 @@ class Moderation(commands.Cog):
         logChannel = await self.GetLogChannel(message.guild.id)
 
         if (logChannel == None):
+            return
+        elif (logChannel == 0):
+            return
+        elif (logChannel == ""):
             return
     
         Cl = self.bot.get_channel(int(logChannel))
@@ -173,27 +186,31 @@ class Moderation(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        # TODO: MAKE THIS FEATURE RESPECT SERVER LANGUAGE
-
         channel = await self.GetJoinChannel(member.guild.id)
 
         if (channel == None):
             return
+        elif (channel == 0):
+            return
+        elif (channel == ""):
+            return
     
         Cc = bot.get_channel(int(channel))
-        await Cc.send('UwU OwO, um novo aluno chegou, <@' + str(member.id) + '>!')
+        await Cc.send(self.bot.GetLocale(member.guild, "mod_join") + '<@' + str(member.id) + '>!')
     
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        # TODO: MAKE THIS FEATURE RESPECT SERVER LANGUAGE
-
         channel = await self.GetLeaveChannel(member.guild.id)
 
         if (channel == None):
             return
+        elif (channel == 0):
+            return
+        elif (channel == ""):
+            return
     
         Cc = bot.get_channel(int(channel))
-        await Cc.send(str(member.name) + '#' + member.discriminator + ' saiu...')
+        await Cc.send(str(member.name) + '#' + member.discriminator + self.bot.GetLocale(member.guild, "mod_leave"))
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -216,7 +233,7 @@ class Moderation(commands.Cog):
 def setup(bot):
     bot.add_cog(Moderation(bot))
 
-    bot.helpCommand.append(["\n:oncoming_police_car:", "**Moderation**", False])
-    bot.helpCommand.append(["f-setlog", "Sets a log channel\nUsage: f-setlog #logs", True])
-    bot.helpCommand.append(["f-setjoin", "Sets a join channel\nUsage: f-setjoin #welcome", True])
-    bot.helpCommand.append(["f-setleave", "Sets a leave channel\nUsage: f-setleave #goodbye", True])
+    bot.helpCommand.append(["\n:oncoming_police_car:", "mod_mod", False])
+    bot.helpCommand.append(["f-setlog", "mod_fsetlog", True])
+    bot.helpCommand.append(["f-setjoin", "mod_fsetjoin", True])
+    bot.helpCommand.append(["f-setleave", "mod_fsetleave", True])

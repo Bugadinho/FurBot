@@ -34,7 +34,7 @@ logger.setLevel(logging.CRITICAL)
 
 parser = argparse.ArgumentParser(description='A glorified e621 Discord browser!')
 parser.add_argument('--bot', type=str,
-                   default="FurBot", help='Specify token for out-of-loop execution')
+                   default="FurBot", help='Specify bot json file')
 args = parser.parse_args()
 
 bot = commands.Bot(command_prefix = 'f-')
@@ -45,6 +45,11 @@ bot.json = []
 with open('../' + args.bot + ".json") as json_file:
     bot.json = json.load(json_file)
 
+bot.localization = []
+
+with open("localization.json") as json_file:
+    bot.localization = json.load(json_file)
+
 bot.CringeList = ["fortnite", "undertale"]
 
 bot.helpCommand = []
@@ -52,6 +57,53 @@ bot.helpCommand = []
 loadedCogs = []
 
 IsAlive = True
+
+bot.languageDict = {
+    "amsterdam" : "dutch",
+    "brazil" : "portuguese",
+    "dubai" : "arabic",
+    "eu-central" : "english",
+    "eu-west" : "english",
+    "europe" : "english",
+    "frankfurt" : "german",
+    "hongkong" : "chinese",
+    "india" : "hindi",
+    "japan" : "japanese",
+    "london" : "english",
+    "russia" : "russian",
+    "singapore" : "malay",
+    "southafrica" : "english",
+    "south-korea" : "korean",
+    "sydney" : "english",
+    "us-central" : "english",
+    "us-east" : "english",
+    "us-south" : "english",
+    "us-west" : "english",
+    "vip-amsterdam" : "dutch",
+    "vip-us_east" : "english",
+    "vip-us_west" : "english",
+}
+
+def GetLocale(guild, stringid):
+    language = bot.languageDict[str(guild.region)]
+    if language == None:
+        language = "english"
+    elif language == "":
+        language = "english"
+    
+    try:
+        text = bot.localization[language][stringid]
+    except:
+        text = bot.localization["english"][stringid]
+
+    if text == None:
+        text = bot.localization["english"][stringid]
+    elif text == "":
+        text = bot.localization["english"][stringid]
+    
+    return text
+
+bot.GetLocale = GetLocale
 
 async def status_task():
     while IsAlive:
@@ -80,35 +132,35 @@ async def on_command_error(ctx, error):
     ignored = (commands.CommandNotFound, commands.UserInputError)
 
     if isinstance(error, commands.CommandNotFound):
-        embed=discord.Embed(title="Invalid command!", description="Command does not exist!" , color=0xff0000)
+        embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "invalidcommand1"), description=bot.GetLocale(ctx.message.guild, "invalidcommand2") , color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
     
-    embed=discord.Embed(title="Error!", description="Something went wrong when calling the command!", color=0xff0000)
+    embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "error1"), description=bot.GetLocale(ctx.message.guild, "error2"), color=0xff0000)
     embed.set_footer(text=error)
     return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
 async def help(ctx):
-    embed=discord.Embed(title=":book: Help", description="These are the commands and how to use them, please keep in mind that the list is very big!", color=0xe5ff24)
+    embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "help1"), description=bot.GetLocale(ctx.message.guild, "help2"), color=0xe5ff24)
     
     for Command in bot.helpCommand:
-        embed.add_field(name=Command[0], value=Command[1], inline=Command[2])
+        embed.add_field(name=Command[0], value=bot.GetLocale(ctx.message.guild, Command[1]), inline=Command[2])
     
     await ctx.message.channel.send(embed=embed)
 
 @bot.command()
 async def info(ctx):
-    embed=discord.Embed(title="FurBot", url="https://github.com/BugadinhoGamers/FurBot", description="The glorified e621 browser!", color=0x80ecff)
+    embed=discord.Embed(title="FurBot", url="https://github.com/BugadinhoGamers/FurBot", description=bot.GetLocale(ctx.message.guild, "furbotdescription"), color=0x80ecff)
     
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/747843765057880208/768545986074378291/IconTransparent.png")
     
-    embed.add_field(name="Latency", value=str(int(bot.latency * 1000)) + "ms", inline=True)
-    embed.add_field(name="CPU Usage", value=str(psutil.cpu_percent()) + "%", inline=True)
-    embed.add_field(name="RAM Usage", value=str(psutil.virtual_memory().percent) + "%", inline=True)
+    embed.add_field(name=bot.GetLocale(ctx.message.guild, "latency"), value=str(int(bot.latency * 1000)) + "ms", inline=True)
+    embed.add_field(name=bot.GetLocale(ctx.message.guild, "cpuusage"), value=str(psutil.cpu_percent()) + "%", inline=True)
+    embed.add_field(name=bot.GetLocale(ctx.message.guild, "ramusage"), value=str(psutil.virtual_memory().percent) + "%", inline=True)
 
-    embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+    embed.add_field(name=bot.GetLocale(ctx.message.guild, "servers"), value=str(len(bot.guilds)), inline=True)
 
-    embed.add_field(name="Platform", value=str(platform.platform()), inline=False)
+    embed.add_field(name=bot.GetLocale(ctx.message.guild, "platform"), value=str(platform.platform()), inline=False)
     #embed.add_field(name="Version", value=str(Version), inline=False)
     #embed.add_field(name="Lead Programmer", value="*Bugadinho#5769*", inline=False)
 
@@ -125,7 +177,7 @@ async def on_message(message):
 @bot.command()
 async def disconnect(ctx):
     if (ctx.message.channel.type is discord.ChannelType.private):
-        embed=discord.Embed(title="Error!", description="This command only works on servers!", color=0xff0000)
+        embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "error1"), description=bot.GetLocale(ctx.message.guild, "error3"), color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
     
     guild = ctx.message.guild
@@ -142,7 +194,7 @@ async def disconnect(ctx):
 @bot.command()
 async def update(ctx):
     if (ctx.message.author.id not in bot.json["maintainers"]):
-        embed=discord.Embed(title="Error!", description="This is a maintainer only command", color=0xff0000)
+        embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "error1"), description=bot.GetLocale(ctx.message.guild, "error4"), color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
     
     await ctx.message.channel.send("Updating and restarting bot!")
@@ -158,7 +210,7 @@ async def update(ctx):
 @bot.command()
 async def restart(ctx):
     if (ctx.message.author.id not in bot.json["maintainers"]):
-        embed=discord.Embed(title="Error!", description="This is a maintainer only command", color=0xff0000)
+        embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "error1"), description=bot.GetLocale(ctx.message.guild, "error4"), color=0xff0000)
         return await ctx.message.channel.send(embed=embed)
     
     await ctx.message.channel.send("Restarting bot!")
