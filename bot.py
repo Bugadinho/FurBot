@@ -85,7 +85,12 @@ bot.languageDict = {
 }
 
 def GetLocale(guild, stringid):
-    language = bot.languageDict[str(guild.region)]
+    language = "english"
+    
+    if guild == None:
+        language = "english"
+    else:
+        language = bot.languageDict[str(guild.region)]
     if language == None:
         language = "english"
     elif language == "":
