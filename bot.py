@@ -52,6 +52,8 @@ with open("localization.json") as json_file:
 
 bot.CringeList = ["fortnite", "undertale"]
 
+bot.name = str(args.bot)
+
 bot.helpCommand = []
 
 loadedCogs = []

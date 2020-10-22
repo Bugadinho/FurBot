@@ -1,5 +1,7 @@
 {
     "english": {
+        "lang_name" : "english",
+
         "hello": "Hello, World!",
         "invalidcommand1" : "Invalid command!",
         "invalidcommand2" : "Command does not exist!",
@@ -65,6 +67,8 @@
         "fun_howis" : " is "
     },
     "portuguese": {
+        "lang_name" : "portuguese",
+
         "hello": "Ola, Mundo!",
         "invalidcommand1" : "Comando invalido!",
         "invalidcommand2" : "Comando inexistente!",
