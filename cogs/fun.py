@@ -54,13 +54,15 @@ class Fun(commands.Cog):
         await ctx.message.channel.send(embed=embed)
     
     @commands.command()
-    async def howmuch(self, ctx, stuff):
-        bobao = stuff
+    async def howmuch(self, ctx, *, stuff):
+        bobao = 0
+        for letter in stuff:
+            bobao += ord(letter)
 
-        random.seed(ctx.message.author.id * int(bobao, 36) * 2)
+        random.seed(ctx.message.author.id * int(bobao) * 2)
         bobin = random.randint(0,100)
 
-        embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "fun_howmuch"), description=ctx.message.author.mention + self.bot.GetLocale(ctx.message.guild, "fun_howis") + str(bobin) + "% " + bobao, color=0x8000ff)
+        embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "fun_howmuch"), description=ctx.message.author.mention + self.bot.GetLocale(ctx.message.guild, "fun_howis") + str(bobin) + "% " + str(stuff), color=0x8000ff)
         await ctx.message.channel.send(embed=embed)
 
         if (bobin == 100):
