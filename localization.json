@@ -15,6 +15,7 @@
         "ramusage" : "RAM Usage",
         "servers" : "Servers",
         "platform" : "Platform",
+        "shard" : "Shard",
         "error3" : "This command only works on servers!",
         "error4" : "This is a maintainer-only command!",
 
@@ -87,6 +88,7 @@
         "ramusage" : "Uso de RAM",
         "servers" : "Servidores",
         "platform" : "Platforma",
+        "shard" : "Pedaco",
         "error3" : "Esse comando apenas funciona em servidores!",
         "error4" : "Esse eh um comando apenas para mantenedores!",
 

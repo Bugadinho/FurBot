@@ -30,7 +30,9 @@ parser.add_argument('--bot', type=str,
                    default="FurBot", help='Specify bot json file')
 args = parser.parse_args()
 
+
 bot = commands.AutoShardedBot(command_prefix = 'f-', intents=intents)
+
 bot.remove_command('help')
 
 bot.json = []
@@ -161,6 +163,7 @@ async def info(ctx):
     embed.add_field(name=bot.GetLocale(ctx.message.guild, "servers"), value=str(len(bot.guilds)), inline=True)
 
     embed.add_field(name=bot.GetLocale(ctx.message.guild, "platform"), value=str(platform.platform()), inline=False)
+    embed.add_field(name=bot.GetLocale(ctx.message.guild, "shard"), value=str(ctx.message.guild.shard_id), inline=False)
     #embed.add_field(name="Version", value=str(Version), inline=False)
     #embed.add_field(name="Lead Programmer", value="*Bugadinho#5769*", inline=False)
 
