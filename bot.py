@@ -178,23 +178,6 @@ async def on_message(message):
     await bot.process_commands(message)
 
 @bot.command()
-async def disconnect(ctx):
-    if (ctx.message.channel.type is discord.ChannelType.private):
-        embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "error1"), description=bot.GetLocale(ctx.message.guild, "error3"), color=0xff0000)
-        return await ctx.message.channel.send(embed=embed)
-    
-    guild = ctx.message.guild
-
-    try:
-        if (guild.voice_client.is_playing()):
-            await guild.voice_client.stop()
-            await guild.voice_client.disconnect()
-        else:
-            await guild.voice_client.disconnect()
-    except:
-        pass
-
-@bot.command()
 async def update(ctx):
     if (ctx.message.author.id not in bot.json["maintainers"]):
         embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "error1"), description=bot.GetLocale(ctx.message.guild, "error4"), color=0xff0000)

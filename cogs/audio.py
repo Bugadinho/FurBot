@@ -60,6 +60,23 @@ class Audio(commands.Cog):
     @commands.command()
     async def owo(self, ctx):
         await self.VoicePlay(ctx, random.choice(self.owoList))
+    
+    @commands.command()
+    async def disconnect(self, ctx):
+        if (ctx.message.channel.type is discord.ChannelType.private):
+            embed=discord.Embed(title=self.bot.GetLocale(ctx.message.guild, "error1"), description=self.bot.GetLocale(ctx.message.guild, "error3"), color=0xff0000)
+            return await ctx.message.channel.send(embed=embed)
+    
+        guild = ctx.message.guild
+
+        try:
+            if (guild.voice_client.is_playing()):
+                await guild.voice_client.stop()
+                await guild.voice_client.disconnect()
+            else:
+                await guild.voice_client.disconnect()
+        except:
+            pass
 
 
 def setup(bot):
