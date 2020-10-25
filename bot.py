@@ -127,6 +127,10 @@ async def on_ready():
             pass
 
 @bot.event
+async def on_shard_ready(shard_id):
+    print('Shard ' + str(shard_id) + ' is ready!')
+
+@bot.event
 async def on_command_error(ctx, error):
     if hasattr(ctx.command, 'on_error'):
         return
@@ -163,7 +167,10 @@ async def info(ctx):
     embed.add_field(name=bot.GetLocale(ctx.message.guild, "servers"), value=str(len(bot.guilds)), inline=True)
 
     embed.add_field(name=bot.GetLocale(ctx.message.guild, "platform"), value=str(platform.platform()), inline=False)
-    embed.add_field(name=bot.GetLocale(ctx.message.guild, "shard"), value=str(ctx.message.guild.shard_id), inline=False)
+
+    if (ctx.message.guild != None):
+        embed.add_field(name=bot.GetLocale(ctx.message.guild, "shard"), value=str(ctx.message.guild.shard_id), inline=False)
+    
     #embed.add_field(name="Version", value=str(Version), inline=False)
     #embed.add_field(name="Lead Programmer", value="*Bugadinho#5769*", inline=False)
 
