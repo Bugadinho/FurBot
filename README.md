@@ -1,10 +1,8 @@
 # FurBot
 
-A glorified e621/e926 browser with some fun stuff
+A glorified e621/e926 browser for Discord with some fun stuff
 
 ## Installation [Linux]
-
-THIS GUIDE IS NOT UP TO DATE AND DOES NOT WORK!
 
 Create a folder for FurBot to reside in and navigate to it
 
@@ -13,10 +11,26 @@ mkdir furbotDir
 cd furbotDir
 ```
 
-Add a file called token.txt and put your Discord Bot token there
+Clone FurBot's repository
 
 ```bash
-nano token.txt
+git clone https://github.com/BugadinhoGamers/FurBot.git
+```
+
+Add a file named FurBot.json and put the following contents in it, alter configs to your liking
+
+```json
+{
+    "token" : "PUTYOURDISCORDTOKENHERE",
+    "dbuser" : "PUTYOURMYSQLDBUSERNAMEHERE",
+    "dbpassword" : "PUTYOURMYSQLDBPASSWORDHERE",
+    "dbip" : "PUTYOURMYSQLDBIP",
+    "blacklistedCogs" : [
+    ],
+    "maintainers" : [
+	PUTYOURDISCORDINTEGERIDHERE
+    ]
+}
 ```
 
 To start up the bot, just do the following
