@@ -232,9 +232,13 @@ class Moderation(commands.Cog):
 def setup(bot):
     bot.add_cog(Moderation(bot))
 
-    bot.helpCommand.append(["\n:oncoming_police_car:", "mod_mod", False])
-    bot.helpCommand.append(["f-setlog", "mod_fsetlog", True])
-    bot.helpCommand.append(["f-setjoin", "mod_fsetjoin", True])
-    bot.helpCommand.append(["f-setleave", "mod_fsetleave", True])
-    bot.helpCommand.append(["f-ban", "mod_fban", True])
-    bot.helpCommand.append(["f-kick", "mod_fkick", True])
+    command = []
+
+    command.append(["\n:oncoming_police_car:", "mod_mod", False])
+    command.append(["f-setlog", "mod_fsetlog", True])
+    command.append(["f-setjoin", "mod_fsetjoin", True])
+    command.append(["f-setleave", "mod_fsetleave", True])
+    command.append(["f-ban", "mod_fban", True])
+    command.append(["f-kick", "mod_fkick", True])
+
+    bot.helpCommand["moderation"] = (command)

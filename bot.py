@@ -49,7 +49,7 @@ bot.CringeList = ["fortnite", "undertale"]
 
 bot.name = str(args.bot)
 
-bot.helpCommand = []
+bot.helpCommand = {}
 
 loadedCogs = []
 
@@ -146,11 +146,20 @@ async def on_command_error(ctx, error):
     return await ctx.message.channel.send(embed=embed)
 
 @bot.command()
-async def help(ctx):
-    embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "help1"), description=bot.GetLocale(ctx.message.guild, "help2"), color=0xe5ff24)
-    
-    for Command in bot.helpCommand:
-        embed.add_field(name=Command[0], value=bot.GetLocale(ctx.message.guild, Command[1]), inline=Command[2])
+async def help(ctx, category = None):
+    if category == None:
+        embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "help1"), description=bot.GetLocale(ctx.message.guild, "help2"), color=0xe5ff24)
+        for Command in bot.helpCommand:
+            comando = bot.helpCommand[Command][0]
+
+            embed.add_field(name=comando[0] + " " + bot.GetLocale(ctx.message.guild, comando[1]), value="```f-help " + Command + "```")
+    else:
+        embed=discord.Embed(title=bot.GetLocale(ctx.message.guild, "help1") + " > " + category, description=bot.GetLocale(ctx.message.guild, "help2"), color=0xe5ff24)
+        if category not in bot.helpCommand:
+            embed.add_field(name=bot.GetLocale(ctx.message.guild, "error1"), value=bot.GetLocale(ctx.message.guild, "invalidcommand1"))
+            return await ctx.message.channel.send(embed=embed)
+        for Command in bot.helpCommand[category]:
+            embed.add_field(name=Command[0], value=bot.GetLocale(ctx.message.guild, Command[1]), inline=Command[2])
     
     await ctx.message.channel.send(embed=embed)
 

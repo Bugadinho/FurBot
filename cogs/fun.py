@@ -72,9 +72,13 @@ class Fun(commands.Cog):
 def setup(bot):
     bot.add_cog(Fun(bot))
 
-    bot.helpCommand.append(["\n:bookmark_tabs:", "fun_fun", False])
-    bot.helpCommand.append(["<:fapgamer:747188878951186433> f-cumlord", "fun_fcumlord", True])
-    bot.helpCommand.append([":thinking: f-howmuch", "fun_fhowmuch", True])
-    bot.helpCommand.append([":dog: f-whichanimal", "fun_fwhichanimal", True])
-    bot.helpCommand.append(["<:subway:744236763735785483> f-yiff", "fun_fyiff", True])
-    bot.helpCommand.append([":fox: f-pounce", "fun_fpounce", True])
+    command = []
+
+    command.append(["\n:bookmark_tabs:", "fun_fun", False])
+    command.append(["<:fapgamer:747188878951186433> f-cumlord", "fun_fcumlord", True])
+    command.append([":thinking: f-howmuch", "fun_fhowmuch", True])
+    command.append([":dog: f-whichanimal", "fun_fwhichanimal", True])
+    command.append(["<:subway:744236763735785483> f-yiff", "fun_fyiff", True])
+    command.append([":fox: f-pounce", "fun_fpounce", True])
+
+    bot.helpCommand["fun"] = (command)

@@ -85,7 +85,11 @@ class ESix(commands.Cog):
 
 def setup(bot):
     bot.add_cog(ESix(bot))
+
+    command = []
     
-    bot.helpCommand.append(["\n<:die:747162817714454570>", "esix_esix", False])
-    bot.helpCommand.append([":globe_with_meridians: f-request", "esix_frequest", True])
-    bot.helpCommand.append(["<:impressive:744230514994708590> f-meme", "esix_fmeme", True])
+    command.append(["\n<:die:747162817714454570>", "esix_esix", False])
+    command.append([":globe_with_meridians: f-request", "esix_frequest", True])
+    command.append(["<:impressive:744230514994708590> f-meme", "esix_fmeme", True])
+
+    bot.helpCommand["esix"] = (command)
