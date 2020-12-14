@@ -1,0 +1,5 @@
+discord.py[voice]
+chatterbot
+psutil
+py621
+mysql-connector-python

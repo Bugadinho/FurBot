@@ -1,6 +1,15 @@
-# FurBot
+# [FurBot](https://discordapp.com/oauth2/authorize?client_id=746776378510147724&scope=bot)
 
-A glorified e621/e926 browser for Discord with some fun stuff
+A cog-based Discord bot with a glorified e621/e926 browser and some fun stuff
+
+## Disclaimer
+
+This bot is my best attempt yet at making a decent Discord bot, but it is nowhere near being perfect, stuff will break and be slow, please be aware of that.
+
+## Requirements
+
+* Python 3.7+
+* MySQL Server
 
 ## Installation [Linux]
 
@@ -33,7 +42,13 @@ Add a file named FurBot.json and put the following contents in it, alter configs
 }
 ```
 
-To start up the bot, just do the following
+Remember to install the bot's dependencies with pip
+
+```bash
+pip install -r FurBot/requirements.txt
+```
+
+And finally, to start the bot you do the folowing
 
 ```bash
 cd FurBot
