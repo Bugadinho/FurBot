@@ -81,7 +81,7 @@ class ESix(commands.Cog):
     
     @commands.command()
     async def meme(self, ctx):
-        await ctx.invoke(bot.get_command('request'), type='sfw', tags="meme")
+        await ctx.invoke(self.bot.get_command('request'), type='sfw', tags="meme")
 
 def setup(bot):
     bot.add_cog(ESix(bot))
