@@ -66,7 +66,7 @@ class Fun(commands.Cog):
         await ctx.message.channel.send(embed=embed)
 
         if (bobin == 100):
-            await ctx.invoke(bot.get_command('request'), type='sfw', tags=bobao)
+            await ctx.invoke(self.bot.get_command('request'), type='sfw', tags=bobao)
 
 
 def setup(bot):
